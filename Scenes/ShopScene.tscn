@@ -37,3 +37,8 @@ text = "Back..."
 
 [node name="Shop" type="Node" parent="."]
 script = ExtResource("2_q2bnl")
+
+[node name="CurrencyLabel" type="Label" parent="."]
+layout_mode = 0
+offset_right = 88.0
+offset_bottom = 37.0
