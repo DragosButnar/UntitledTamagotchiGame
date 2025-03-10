@@ -8,7 +8,7 @@ atlas = ExtResource("2_g8q2e")
 region = Rect2(16.1545, 0, 16.59, 16.8556)
 
 [resource]
-resource_name = "Apple"
+resource_name = "apple"
 script = ExtResource("1_2qvcr")
 food_name = "Apple"
 hunger_reduction = 5

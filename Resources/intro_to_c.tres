@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c162wr6iex2nb" path="res://Model/Book.gd" id="1_d4g8v"]
 
 [resource]
-resource_name = "Intro to C"
+resource_name = "intro_to_c"
 script = ExtResource("1_d4g8v")
 knowledge_gain = 5
 item_name = "Intro to C"

@@ -11,8 +11,11 @@ with placeholder methods. Subclasses must override these methods.
 @export var cost: int
 @export var texture: Texture2D
 
-func get_resource_name() -> String:
-	# Return the display name of this resource
+func get_internal_name() -> String:
+	# Return the internal name of this resource
+	return self.resource_name
+
+func get_display_name() -> String:
 	printerr("get_name() not implemented in subclass!")
 	return "Unknown Resource"
 

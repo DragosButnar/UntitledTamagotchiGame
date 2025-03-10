@@ -8,7 +8,7 @@ Likely gives a decent boost to mood and reduces loneliness more than a book.
 """
 
 
-func get_resource_name() -> String:
+func get_display_name() -> String:
 	return item_name
 
 func use(user) -> void:

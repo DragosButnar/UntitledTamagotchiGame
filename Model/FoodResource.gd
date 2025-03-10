@@ -10,7 +10,7 @@ Example resource subclass representing a food item.
 @export var hunger_reduction: int
 @export var mood_boost: int
 
-func get_resource_name() -> String:
+func get_display_name() -> String:
 	return food_name
 
 func use(user) -> void:

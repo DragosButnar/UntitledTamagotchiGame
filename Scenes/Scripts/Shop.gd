@@ -28,7 +28,7 @@ func buy(item_data: ResourceInterface) -> bool:
 	Returns true if purchase succeeded, false otherwise.
 	"""
 	var cost = item_data.get_cost()
-	var name = item_data.get_resource_name()
+	var name = item_data.get_internal_name()
 	
 	# Check if player has enough currency
 	if Player.remove_currency(cost):
@@ -42,7 +42,7 @@ func sell(item_data: ResourceInterface) -> bool:
 	Optional method to sell an item. 
 	"""
 	var cost = item_data.get_cost()
-	var name = item_data.get_resource_name()
+	var name = item_data.get_internal_name()
 	
 	# Check if player has the item
 	if Player.remove_item(name, 1):

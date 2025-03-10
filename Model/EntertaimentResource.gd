@@ -11,7 +11,7 @@ improving mood or reducing loneliness.
 @export var mood_boost: int
 @export var loneliness_reduction: int
 
-func get_resource_name() -> String:
+func get_display_name() -> String:
 	return item_name
 
 func use(user) -> void:

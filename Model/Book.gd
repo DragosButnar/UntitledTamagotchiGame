@@ -12,7 +12,7 @@ and optionally increase knowledge or some other stat.
 
 @export var knowledge_gain: int
 
-func get_resource_name() -> String:
+func get_display_name() -> String:
 	return item_name
 
 func use(user) -> void:

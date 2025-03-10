@@ -14,7 +14,7 @@ func _ready():
 
 	# For each item, create a row with a Label and a Buy button
 	for item_data in items:
-		var item_name = item_data.get_resource_name()
+		var item_name = item_data.get_internal_name()
 		var cost = item_data.get_cost()
 		var boost = item_data.get_boosts()
 		
@@ -53,7 +53,7 @@ func _on_BuyButton_pressed(button: Button):
 	var success = shop_script.buy(item_data)
 	if success:
 		# Show a small feedback message
-		print("Purchased: ", item_data.get_resource_name())
+		print("Purchased: ", item_data.get_display_name())
 		# Possibly emit a signal or update UI
 	else:
 		print("Purchase failed: Not enough currency or other reason.")
