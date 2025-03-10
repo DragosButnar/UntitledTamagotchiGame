@@ -3,6 +3,7 @@ extends Control
 @onready var shop_script = $Shop
 @onready var items_container = $PanelContainer/VBoxContainer
 @onready var back_button = $PanelContainer/BackButton
+@onready var currency_label = $CurrencyLabel
 
 
 # Called when the node enters the scene tree for the first time.
@@ -14,7 +15,7 @@ func _ready():
 
 	# For each item, create a row with a Label and a Buy button
 	for item_data in items:
-		var item_name = item_data.get_internal_name()
+		var item_name = item_data.get_display_name()
 		var cost = item_data.get_cost()
 		var boost = item_data.get_boosts()
 		
@@ -40,7 +41,12 @@ func _ready():
 		# Connect the button to a callback
 		buy_button.pressed.connect(_on_BuyButton_pressed.bind(buy_button))
 		items_container.add_child(buy_button)
+		
+	currency_label.text
 
+
+func _process(delta: float) -> void:
+	currency_label.text = str(Player.currency)
 
 func _on_BackButton_pressed():
 	UiManager.go_back()

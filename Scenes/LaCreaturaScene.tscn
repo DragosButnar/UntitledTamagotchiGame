@@ -13,14 +13,12 @@ script/source = "extends Control
 @onready var lacreatura = $ClickableSprite
 @onready var top_right = $CanvasLayer/TopRightButton
 @onready var bottom_right = $CanvasLayer/BottomRightButton
-@onready var currency_label = $CanvasLayer/CurrencyLabel
 
 func _ready():
 	shop_button.pressed.connect(_on_ShopButton_pressed)
 	exit_button.pressed.connect(_on_ExitButton_pressed)
 	top_right.pressed.connect(_on_top_right_pressed)
 	bottom_right.pressed.connect(_on_bottom_right_pressed)
-	currency_label.text = str(Player.currency)
 	
 	lacreatura.play(\"default\")  # Auto-play animation
 	# Set collision shape to match frame size
@@ -57,7 +55,7 @@ func set_animation_speed(speed: float):
 	
 func _on_ShopButton_pressed():
 	print(\"Top Left Button Pressed\")
-	UiManager.show_screen(\"res://Scenes/ShopeScene.tscn\")
+	UiManager.show_screen(\"res://Scenes/ShopScene.tscn\")
 	
 func _on_ExitButton_pressed():
 	print(\"Bottom Left Button Pressed\")
@@ -144,12 +142,3 @@ offset_bottom = 72.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 24
-
-[node name="CurrencyLabel" type="Label" parent="CanvasLayer"]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -20.0
-offset_right = 20.0
-offset_bottom = 23.0
-grow_horizontal = 2

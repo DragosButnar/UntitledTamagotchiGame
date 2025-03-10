@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://e1kqpuwy4f15"]
 
-[ext_resource type="Script" uid="uid://chsx6qtdh86d2" path="res://Scenes/Scripts/ShopScene.gd" id="1_pb1uo"]
-[ext_resource type="Script" uid="uid://bmbook1sf7fa" path="res://Scenes/Scripts/Shop.gd" id="2_q2bnl"]
+[ext_resource type="Script" uid="uid://chsx6qtdh86d2" path="res://Scenes/Scripts/ShopScene.gd" id="1_x7s06"]
+[ext_resource type="Script" uid="uid://bmbook1sf7fa" path="res://Scenes/Scripts/Shop.gd" id="2_ggt0q"]
 
 [node name="ShopScene" type="Control"]
 layout_mode = 3
@@ -15,7 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("1_pb1uo")
+script = ExtResource("1_x7s06")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -36,7 +36,7 @@ size_flags_vertical = 8
 text = "Back..."
 
 [node name="Shop" type="Node" parent="."]
-script = ExtResource("2_q2bnl")
+script = ExtResource("2_ggt0q")
 
 [node name="CurrencyLabel" type="Label" parent="."]
 layout_mode = 0
