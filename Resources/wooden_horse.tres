@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Toy" load_steps=2 format=3 uid="uid://claehaj5mfn24"]
+
+[ext_resource type="Script" uid="uid://crkvnux80mw5n" path="res://Model/Toy.gd" id="1_4b4pi"]
+
+[resource]
+resource_name = "Wooden Horse"
+script = ExtResource("1_4b4pi")
+item_name = "Wooden Horse"
+mood_boost = 3
+loneliness_reduction = 6
+cost = 15

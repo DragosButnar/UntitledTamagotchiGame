@@ -1,0 +1,125 @@
+[gd_scene load_steps=3 format=3 uid="uid://bh355xhfbyjid"]
+
+[sub_resource type="GDScript" id="GDScript_kgtpt"]
+script/source = "class_name DraggableItem
+extends Control
+
+signal drag_started(item)
+signal drag_ended(item)
+
+var is_dragging := false
+var original_position: Vector2
+var original_parent: Node
+var base_item: ResourceInterface
+var texture_rect: TextureRect
+
+
+func _ready():
+	# Set minimum size for clickable area
+	custom_minimum_size = Vector2(64, 64)
+	# Proper input handling
+	mouse_filter = Control.MOUSE_FILTER_STOP
+
+	texture_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+func setup(item: ResourceInterface):
+	texture_rect = $TextureRect
+	base_item = item
+	texture_rect.texture = base_item.get_texture()
+	texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	texture_rect.anchor_left = 0.5
+	texture_rect.anchor_right = 0.5
+	texture_rect.anchor_top = 0.5
+	texture_rect.anchor_bottom = 0.5
+	
+	
+	# Center texture in available space
+	texture_rect.size = size
+	texture_rect.position = Vector2.ZERO
+
+func _gui_input(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			start_drag()
+		else:
+			stop_drag()
+		accept_event()
+
+func start_drag():
+	is_dragging = true
+	original_position = global_position
+	original_parent = get_parent()
+	
+	# Maintain global position during reparent
+	var last_global_pos = global_position
+	original_parent.remove_child(self)
+	#get_node(\"/root/Main/DragLayer\").add_child(self)
+	global_position = last_global_pos
+	
+	mouse_default_cursor_shape = Control.CURSOR_DRAG
+	drag_started.emit(self)
+
+func _update_drag_position():
+	# Use get_global_mouse_position() with proper Control coordinates
+	var mouse_pos = get_global_mouse_position()
+	global_position = mouse_pos - (size / 2)
+
+func stop_drag():
+	is_dragging = false
+	mouse_default_cursor_shape = Control.CURSOR_ARROW
+	drag_ended.emit(self)
+	
+	# Convert mouse position to Area2D's local space
+	var target_area = get_node(\"/root/Main/ClickableSprite/Area2D\")
+	var mouse_pos = get_global_mouse_position()
+	var local_pos = target_area.global_transform.affine_inverse() * mouse_pos
+	
+	if target_area.shape.collide(target_area.global_transform, local_pos):
+		handle_successful_drop()
+	else:
+		reset_position()
+
+func _process(delta):
+	if is_dragging:
+		_update_drag_position()
+
+func handle_successful_drop():
+	print(\"Item dropped successfully!\")
+	Player.remove_item(base_item.get_resource_name())
+	queue_free()
+
+func reset_position():
+	# Handle scroll container offset
+	var scroll_container = original_parent.get_parent() as ScrollContainer
+	var scroll_offset = scroll_container.scroll_horizontal
+	
+	get_parent().remove_child(self)
+	original_parent.add_child(self)
+	
+	# Reset position with scroll offset
+	position = original_position - Vector2(scroll_offset, 0)
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trton"]
+size = Vector2(1163, 665)
+
+[node name="Draggable item" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_kgtpt")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 64.0
+offset_bottom = 64.0
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(575, 326)
+shape = SubResource("RectangleShape2D_trton")

@@ -1,0 +1,142 @@
+[gd_scene load_steps=8 format=3 uid="uid://bvbnb2megcros"]
+
+[ext_resource type="Texture2D" uid="uid://ohl6p5mcivb0" path="res://Sprites/slime_char/package/sprites/aqua/ready_1.png" id="1_x3nm1"]
+[ext_resource type="Texture2D" uid="uid://b4an77mmahrvk" path="res://Sprites/slime_char/package/sprites/aqua/ready_2.png" id="2_lpa5a"]
+[ext_resource type="Texture2D" uid="uid://covplq5jyeuwt" path="res://Sprites/slime_char/package/sprites/aqua/ready_3.png" id="3_8f2nq"]
+[ext_resource type="Texture2D" uid="uid://cw426sdjweyqs" path="res://Sprites/slime_char/package/sprites/aqua/ready_4.png" id="4_mj0o7"]
+
+[sub_resource type="GDScript" id="GDScript_e7o6j"]
+script/source = "extends Control
+
+@onready var lacreatura = $ClickableSprite
+@onready var hbox = $CanvasLayer/ItemListContainer/HBoxContainer
+const DraggableItemScene = preload(\"res://Scenes/DraggableItem.tscn\")
+
+func _ready():
+	# Connect area input
+	$ClickableSprite/Area2D.input_event.connect(_on_sprite_clicked)
+	
+	lacreatura.play(\"default\")  # Auto-play animation
+	# Set collision shape to match frame size
+	var frame_size = lacreatura.sprite_frames.get_frame_texture(\"default\", 0).get_size()
+	#var circle_shape = CircleShape2D.new()
+	#circle_shape.radius = max(frame_size.x, frame_size.y) / 2
+	#$ClickableSprite/Area2D/CollisionShape2D.shape = circle_shape
+	
+	var items = Player.check_inventory()
+	
+	# Initialize item list
+	for resource_name in items.keys():
+		var draggable_item = DraggableItemScene.instantiate()
+		var resource = GameManager.get_resource_by_name(resource_name)
+		if not resource:
+			push_error(\"Missing resource: %s\" % resource_name)
+			continue
+		
+		draggable_item.setup(resource)
+		draggable_item.drag_started.connect(_on_item_drag_started)
+		draggable_item.drag_ended.connect(_on_item_drag_ended)
+		hbox.add_child(draggable_item)
+	
+
+
+func _on_sprite_clicked(viewport, event, shape_idx):
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			print(\"Sprite clicked!\")
+
+
+
+	
+func start_animation():
+	if lacreatura.sprite_frames.has_animation(\"default\"):
+		lacreatura.play(\"default\")
+
+func set_animation_speed(speed: float):
+	if lacreatura.sprite_frames:
+		lacreatura.sprite_frames.set_animation_speed(\"default\", speed)
+
+func stop_animation():
+	lacreatura.stop()
+	
+	
+func _on_item_drag_started(item):
+	#$CanvasLayer/ItemListContainer.scroll_horizontal_enabled = false
+	return
+
+func _on_item_drag_ended(item):
+	#$CanvasLayer/ItemListContainer.scroll_horizontal_enabled = true
+	return
+	
+func _on_BackButton_pressed():
+	print(\"Bottom Left Button Pressed\")
+	UiManager.exit()
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rxx3s"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_x3nm1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_lpa5a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_8f2nq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_mj0o7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6umhc"]
+
+[node name="GiveItemScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_e7o6j")
+
+[node name="ClickableSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(402, 350)
+scale = Vector2(11.7246, 11.8594)
+sprite_frames = SubResource("SpriteFrames_rxx3s")
+
+[node name="Area2D" type="Area2D" parent="ClickableSprite"]
+position = Vector2(2.55872, -4.13175)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableSprite/Area2D"]
+position = Vector2(11.8554, 5.56522)
+shape = SubResource("CircleShape2D_6umhc")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ItemListContainer" type="ScrollContainer" parent="CanvasLayer"]
+custom_minimum_size = Vector2(200, 100)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/ItemListContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="DragLayer" type="CanvasLayer" parent="."]

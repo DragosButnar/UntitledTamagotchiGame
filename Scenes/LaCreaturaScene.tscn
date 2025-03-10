@@ -1,0 +1,155 @@
+[gd_scene load_steps=8 format=3 uid="uid://ckwlnr6xoexch"]
+
+[ext_resource type="Texture2D" uid="uid://ohl6p5mcivb0" path="res://Sprites/slime_char/package/sprites/aqua/ready_1.png" id="1_6govx"]
+[ext_resource type="Texture2D" uid="uid://b4an77mmahrvk" path="res://Sprites/slime_char/package/sprites/aqua/ready_2.png" id="2_tr3wi"]
+[ext_resource type="Texture2D" uid="uid://covplq5jyeuwt" path="res://Sprites/slime_char/package/sprites/aqua/ready_3.png" id="3_u7olw"]
+[ext_resource type="Texture2D" uid="uid://cw426sdjweyqs" path="res://Sprites/slime_char/package/sprites/aqua/ready_4.png" id="4_ila8h"]
+
+[sub_resource type="GDScript" id="GDScript_247v1"]
+script/source = "extends Control
+
+@onready var shop_button = $CanvasLayer/TopLeftButton
+@onready var exit_button = $CanvasLayer/BottomLeftButton
+@onready var lacreatura = $ClickableSprite
+@onready var top_right = $CanvasLayer/TopRightButton
+@onready var bottom_right = $CanvasLayer/BottomRightButton
+@onready var currency_label = $CanvasLayer/CurrencyLabel
+
+func _ready():
+	shop_button.pressed.connect(_on_ShopButton_pressed)
+	exit_button.pressed.connect(_on_ExitButton_pressed)
+	top_right.pressed.connect(_on_top_right_pressed)
+	bottom_right.pressed.connect(_on_bottom_right_pressed)
+	currency_label.text = str(Player.currency)
+	
+	lacreatura.play(\"default\")  # Auto-play animation
+	# Set collision shape to match frame size
+	##var frame_size = $ClickableSprite.sprite_frames.get_frame_texture(\"default\", 0).get_size()
+	##$ClickableSprite/Area2D/CollisionShape2D.shape.size = frame_size
+	
+
+	
+	# Connect area input
+	$ClickableSprite/Area2D.input_event.connect(_on_sprite_clicked)
+
+func _on_sprite_clicked(viewport, event, shape_idx):
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			print(\"Sprite clicked!\")
+
+
+func _on_top_right_pressed():
+	print(\"Top Right Button Pressed\")
+	UiManager.show_screen(\"res://Scenes/GiveItemScreen.tscn\")
+
+
+func _on_bottom_right_pressed():
+	print(\"Bottom Right Button Pressed\")
+	
+func start_animation():
+	lacreatura.play(\"default\")
+
+func stop_animation():
+	lacreatura.stop()
+
+func set_animation_speed(speed: float):
+	lacreatura.sprite_frames.set_animation_speed(\"default\", speed)
+	
+func _on_ShopButton_pressed():
+	print(\"Top Left Button Pressed\")
+	UiManager.show_screen(\"res://Scenes/ShopeScene.tscn\")
+	
+func _on_ExitButton_pressed():
+	print(\"Bottom Left Button Pressed\")
+	UiManager.exit()
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xs0gr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_6govx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_tr3wi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_u7olw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ila8h")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tee3r"]
+
+[node name="LaCreaturaScene" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = SubResource("GDScript_247v1")
+
+[node name="ClickableSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(402, 350)
+scale = Vector2(11.7246, 11.8594)
+sprite_frames = SubResource("SpriteFrames_xs0gr")
+
+[node name="Area2D" type="Area2D" parent="ClickableSprite"]
+position = Vector2(2.55872, -4.13175)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableSprite/Area2D"]
+position = Vector2(11.8554, 5.56522)
+shape = SubResource("CircleShape2D_tee3r")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TopLeftButton" type="Button" parent="CanvasLayer"]
+offset_right = 47.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 24
+text = "Shop"
+
+[node name="TopRightButton" type="Button" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -90.0
+offset_bottom = 80.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 24
+text = "Give items"
+
+[node name="BottomLeftButton" type="Button" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 46.0
+offset_bottom = 49.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 24
+text = "Exit"
+
+[node name="BottomRightButton" type="Button" parent="CanvasLayer"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -8.0
+offset_bottom = 72.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 24
+
+[node name="CurrencyLabel" type="Label" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
