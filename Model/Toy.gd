@@ -11,11 +11,9 @@ Likely gives a decent boost to mood and reduces loneliness more than a book.
 func get_display_name() -> String:
 	return item_name
 
-func use(user) -> void:
-	# Similar pattern to BookResource, but no extra stats besides mood/loneliness
-	if user and user.has_method("update_stat"):
-		user.update_stat("mood", mood_boost)
-		user.update_stat("loneliness", -loneliness_reduction)
+func use() -> void:
+	LaCreatura.update_stat("mood", mood_boost)
+	LaCreatura.update_stat("loneliness", -loneliness_reduction)
 
 func get_stats() -> Dictionary:
 	# Inherit parent's stats logic, but for clarity, we define them here

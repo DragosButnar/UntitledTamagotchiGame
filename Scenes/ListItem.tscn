@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3 uid="uid://nxd584teta5w"]
+
+[sub_resource type="GDScript" id="GDScript_flr55"]
+script/source = "class_name ListItem
+
+extends TextureRect
+
+@onready var colider = $Area2D/CollisionShape2D
+
+var resource: ResourceInterface
+
+func setup(res: ResourceInterface) -> void:
+	resource = res
+	set_texture(resource.get_texture())
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.is_pressed():
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			print(\"Item: \" + resource.get_display_name() + \" clicked\")
+			_use_item()
+			var result = Player.check_inventory_for_resource(resource.get_internal_name())
+			if result == 0:
+				queue_free()
+
+func _use_item() -> void:
+	resource.use()
+	Player.remove_item(resource.get_internal_name())
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2lxo0"]
+size = Vector2(1160, 657)
+
+[node name="TextureRect" type="TextureRect"]
+offset_right = 1154.0
+offset_bottom = 653.0
+script = SubResource("GDScript_flr55")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(570, 318.5)
+shape = SubResource("RectangleShape2D_2lxo0")

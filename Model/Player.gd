@@ -3,7 +3,7 @@ extends Node
 
 # Basic properties
 static var currency: int = 100
-static var inventory: Dictionary = {"apple": 1}
+static var inventory: Dictionary[String, int] = {"apple": 1}
 
 # Called when the node enters the scene tree for the first time
 func _ready():
@@ -53,10 +53,9 @@ static func use_item(resource_name: String):
 	else:
 		print("Failed to use item:", resource_name)
 		
-static func check_inventory_for_resource(resource_name: String = ""):
-	if inventory.find_key(resource_name):
-		return inventory.get(resource_name)
-	return "n/a"
+static func check_inventory_for_resource(resource_name: String = "") -> int:
+		var val = inventory.get(resource_name)
+		return val != null if val else 0
 	
 static func check_inventory():
 	return inventory

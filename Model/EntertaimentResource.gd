@@ -14,13 +14,9 @@ improving mood or reducing loneliness.
 func get_display_name() -> String:
 	return item_name
 
-func use(user) -> void:
-	# Example: If user is a creature or player that has update_stat()
-	if user and user.has_method("update_stat"):
-		# Increase mood
-		user.update_stat("mood", mood_boost)
-		# Decrease loneliness
-		user.update_stat("loneliness", -loneliness_reduction)
+func use() -> void:
+	LaCreatura.update_stat("mood", mood_boost)
+	LaCreatura.update_stat("loneliness", -loneliness_reduction)
 
 func get_stats() -> Dictionary:
 	# Return any relevant stats for display or saving

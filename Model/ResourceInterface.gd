@@ -24,7 +24,7 @@ func get_type() -> String:
 	printerr("get_type() not implemented in subclass!")
 	return "Unspecified"
 
-func use(user) -> void:
+func use() -> void:
 	printerr("use() not implemented in subclass!")
 	
 

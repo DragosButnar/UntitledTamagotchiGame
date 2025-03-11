@@ -11,7 +11,7 @@ script/source = "extends Control
 @onready var lacreatura = $ClickableSprite
 @onready var hbox = $CanvasLayer/ItemListContainer/HBoxContainer
 @onready var back_button = $GoBackButton
-const DraggableItemScene = preload(\"res://Scenes/DraggableItem.tscn\")
+const ListItem = preload(\"res://Scenes/ListItem.tscn\")
 
 func _ready():
 	# Connect area input
@@ -29,18 +29,15 @@ func _ready():
 	
 	# Initialize item list
 	for resource_name in items.keys():
-		var draggable_item = DraggableItemScene.instantiate()
 		var resource = GameManager.get_resource_by_name(resource_name)
 		if not resource:
 			push_error(\"Missing resource: %s\" % resource_name)
 			continue
 		
-		draggable_item.setup(resource)
-		draggable_item.drag_started.connect(_on_item_drag_started)
-		draggable_item.drag_ended.connect(_on_item_drag_ended)
-		hbox.add_child(draggable_item)
+		var list_item = ListItem.instantiate()
+		list_item.setup(resource)
+		hbox.add_child(list_item)
 	
-
 
 func _on_sprite_clicked(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.pressed:
@@ -122,16 +119,18 @@ shape = SubResource("CircleShape2D_6umhc")
 
 [node name="ItemListContainer" type="ScrollContainer" parent="CanvasLayer"]
 custom_minimum_size = Vector2(200, 100)
+layout_direction = 2
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -100.0
-offset_top = -100.0
-offset_right = 100.0
+offset_left = -577.0
+offset_top = -108.0
+offset_right = 578.0
 grow_horizontal = 2
 grow_vertical = 0
+size_flags_horizontal = 3
 horizontal_scroll_mode = 2
 vertical_scroll_mode = 0
 
@@ -140,8 +139,6 @@ custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
-
-[node name="DragLayer" type="CanvasLayer" parent="."]
 
 [node name="GoBackButton" type="Button" parent="."]
 layout_mode = 0

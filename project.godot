@@ -22,6 +22,7 @@ FileManager="*res://Service/FileManager.gd"
 DatabaseManager="*res://Service/DatabaseManager.gd"
 ActivityManager="*res://Service/ActivityManager.gd"
 Player="*res://Model/Player.gd"
+LaCreatura="*res://Model/LaCreatura.gd"
 
 [editor]
 

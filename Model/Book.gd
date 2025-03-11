@@ -15,14 +15,10 @@ and optionally increase knowledge or some other stat.
 func get_display_name() -> String:
 	return item_name
 
-func use(user) -> void:
-	# We'll call 'update_stat' on the user, as in the parent class,
-	# plus an optional "knowledge" stat for a Book.
-	if user and user.has_method("update_stat"):
-		user.update_stat("mood", mood_boost)
-		user.update_stat("loneliness", -loneliness_reduction)
-		# Extra effect for reading a book:
-		user.update_stat("knowledge", knowledge_gain)
+func use() -> void:
+	LaCreatura.update_stat("mood", mood_boost)
+	LaCreatura.update_stat("loneliness", -loneliness_reduction)
+	LaCreatura.update_stat("knowledge", knowledge_gain)
 
 func get_stats() -> Dictionary:
 	# Inherit the parent's stats and add 'knowledge_gain'

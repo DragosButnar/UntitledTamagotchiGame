@@ -13,12 +13,9 @@ Example resource subclass representing a food item.
 func get_display_name() -> String:
 	return food_name
 
-func use(user) -> void:
-	# If `user` is e.g. a Player or a Creature, apply the effect
-	if user and user.has_method("update_stat"):
-		# Lower hunger, raise mood
-		user.update_stat("hunger", -hunger_reduction)
-		user.update_stat("mood", mood_boost)
+func use() -> void:
+	LaCreatura.update_stat("hunger", -hunger_reduction)
+	LaCreatura.update_stat("mood", mood_boost)
 
 func get_stats() -> Dictionary:
 	return {
