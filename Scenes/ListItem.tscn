@@ -33,6 +33,7 @@ size = Vector2(1160, 657)
 [node name="TextureRect" type="TextureRect"]
 offset_right = 1154.0
 offset_bottom = 653.0
+expand_mode = 3
 script = SubResource("GDScript_flr55")
 
 [node name="Area2D" type="Area2D" parent="."]
