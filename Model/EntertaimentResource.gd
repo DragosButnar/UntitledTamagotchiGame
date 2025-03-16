@@ -15,8 +15,8 @@ func get_display_name() -> String:
 	return item_name
 
 func use() -> void:
-	LaCreatura.update_stat("mood", mood_boost)
-	LaCreatura.update_stat("loneliness", -loneliness_reduction)
+	StatsManager.add_to_stat(StatsManager.Stat.MOOD_VALUE, mood_boost)
+	StatsManager.add_to_stat(StatsManager.Stat.LONELINESS, -loneliness_reduction)
 
 func get_stats() -> Dictionary:
 	# Return any relevant stats for display or saving

@@ -14,8 +14,8 @@ func get_display_name() -> String:
 	return food_name
 
 func use() -> void:
-	LaCreatura.update_stat("hunger", -hunger_reduction)
-	LaCreatura.update_stat("mood", mood_boost)
+	StatsManager.add_to_stat(StatsManager.Stat.HUNGER, -hunger_reduction)
+	StatsManager.add_to_stat(StatsManager.Stat.MOOD_VALUE, mood_boost)
 
 func get_stats() -> Dictionary:
 	return {

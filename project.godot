@@ -16,13 +16,13 @@ config/features=PackedStringArray("4.4", "Mobile")
 
 [autoload]
 
-GameManager="*res://Service/GameManager.gd"
-UiManager="*res://Service/UIManager.gd"
-FileManager="*res://Service/FileManager.gd"
-DatabaseManager="*res://Service/DatabaseManager.gd"
-ActivityManager="*res://Service/ActivityManager.gd"
-Player="*res://Model/Player.gd"
-LaCreatura="*res://Model/LaCreatura.gd"
+GameManager="*res://Singletons/Service/GameManager.gd"
+UiManager="*res://Singletons/Service/UIManager.gd"
+FileManager="*res://Singletons/Service/FileManager.gd"
+DatabaseManager="*res://Singletons/Service/DatabaseManager.gd"
+ActivityManager="*res://Singletons/Service/ActivityManager.gd"
+Player="*res://Singletons/Player.gd"
+StatsManager="*res://Singletons/StatsManager.gd"
 
 [editor]
 
