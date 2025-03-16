@@ -1,10 +1,8 @@
 extends Node
+class_name UIManager
 
 var _scene_history: Array = []
 var _current_scene_path: String = ""
-
-func _ready() -> void:
-	_current_scene_path = "res://Scenes/LaCreaturaScene.tscn"
 
 func show_screen(new_scene_path: String):
 	# If we already have a scene, push it onto the history stack
@@ -26,12 +24,13 @@ func go_back():
 	else:
 		print("No previous scene in history.")
 		# Optionally handle the case where there's nowhere to go back.
-		
-func exit(exit_code: int = 0):
-	##TODO: Make sure to save data before quitting
-	clear_history()
-	get_tree().quit(exit_code)
 
 func clear_history():
 	# In case you want to reset the scene history at some point
 	_scene_history.clear()
+
+func exit():
+	get_tree().quit(0)
+
+func _ready() -> void:
+	_current_scene_path = "res://Scenes/LaCreaturaScene.tscn"
