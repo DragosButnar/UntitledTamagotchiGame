@@ -1,11 +1,7 @@
-[gd_resource type="Resource" script_class="Toy" load_steps=4 format=3 uid="uid://claehaj5mfn24"]
+[gd_resource type="Resource" script_class="Toy" load_steps=3 format=3 uid="uid://claehaj5mfn24"]
 
 [ext_resource type="Script" uid="uid://crkvnux80mw5n" path="res://Model/Toy.gd" id="1_4b4pi"]
-[ext_resource type="Texture2D" uid="uid://dj0xx6msvvwjw" path="res://Sprites/Food chart 1 refined.png" id="2_gislb"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bsosm"]
-atlas = ExtResource("2_gislb")
-region = Rect2(16, 16, 16, 16)
+[ext_resource type="Texture2D" uid="uid://c8p2l3gm4co8p" path="res://Sprites/slime_char/package/sprites/aqua/dead_5.png" id="2_gislb"]
 
 [resource]
 resource_name = "wooden_horse"
@@ -14,4 +10,4 @@ item_name = "Wooden Horse"
 mood_boost = 3
 loneliness_reduction = 6
 cost = 15
-texture = SubResource("AtlasTexture_bsosm")
+texture = ExtResource("2_gislb")
