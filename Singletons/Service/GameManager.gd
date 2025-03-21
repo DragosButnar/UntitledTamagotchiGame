@@ -10,12 +10,16 @@ func get_resource_by_name(resource_name: String) -> ResourceInterface:
 		return null
 
 func _ready() -> void:
-	get_tree().root.get_window().connect("close_requested", _on_window_close_requested)
+	get_tree().auto_accept_quit = false
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		_on_window_close_requested()
 
 func _on_window_close_requested():
 	_save_data()
-	get_tree().root.get_window().queue_free()
+	get_tree().quit(0)
 
 func _save_data():
+	print("here")
 	SaveManager.save_all()

@@ -30,6 +30,7 @@ func clear_history():
 	_scene_history.clear()
 
 func exit():
+	SaveManager.save_all()
 	get_tree().quit(0)
 
 func _ready() -> void:

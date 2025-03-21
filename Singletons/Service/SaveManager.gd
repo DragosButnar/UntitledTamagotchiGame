@@ -5,12 +5,13 @@ static func save_all() -> void:
 
 static func _save_inventory() -> void:
 	var file = FileAccess.open(FilePaths.SAVE_PATH, FileAccess.WRITE)
+	print(file)
 	if file:
-		file.store_string(JSON.stringify(Player.check_inventory(), "\t"))
+		file.store_string(JSON.stringify("test"))
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	var err = DirAccess.make_dir_recursive_absolute(FilePaths.SAVE_FOLDER_PATH)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
