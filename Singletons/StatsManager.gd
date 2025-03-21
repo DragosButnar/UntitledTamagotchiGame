@@ -2,6 +2,14 @@ extends Node
 
 enum Stat {MOOD_VALUE, HUNGER, THIRST, LONELINESS, ENERGY}
 
+const STAT_KEYS_TO_ENUM := {
+	"mood_value": Stat.MOOD_VALUE,
+	"hunger": Stat.HUNGER,
+	"thirst": Stat.THIRST,
+	"loneliness": Stat.LONELINESS,
+	"energy": Stat.ENERGY
+}
+
 const STAT_LIMITS := {
 	Stat.MOOD_VALUE: {"min": -100, "max": 100},
 	Stat.HUNGER: {"min": 0, "max": 100},
@@ -93,7 +101,30 @@ func get_stat(stat: Stat) -> int:
 		Stat.LONELINESS: return loneliness
 		Stat.ENERGY: return energy
 	return 0
+	
+	
+func get_stats() -> Dictionary[String, int]:
+	return {
+		"mood_value": mood_value,
+		"energy": energy,
+		"hunger": hunger,
+		"thirst": thirst,
+		"loneliness": loneliness
+	}
 
+func set_stats(data: Dictionary) -> void:
+	for key in data:
+		if STAT_KEYS_TO_ENUM.has(key):
+			var stat: Stat = STAT_KEYS_TO_ENUM[key]
+			var value: int = data[key]
+			update_stat(stat, value)
+		else:
+			push_error("Invalid stat key in data: %s" % key)
+	update_mood_name()
+	
+func get_mood_name() -> String:
+	return mood_name
+	
 func update_mood_name() -> void:
 	for mood in MOOD_THRESHOLDS:
 		if mood_value >= MOOD_THRESHOLDS[mood]:

@@ -57,6 +57,9 @@ static func check_inventory_for_resource(resource_name: String = "") -> int:
 		var val = inventory.get(resource_name)
 		return val != null if val else 0
 	
-static func check_inventory():
+static func check_inventory() -> Dictionary[String, int]:
 	return inventory
+	
+static func get_currency() -> int:
+	return currency
 			

@@ -90,12 +90,12 @@ anchors_preset = 0
 script = SubResource("GDScript_247v1")
 
 [node name="ClickableSprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(496, 355)
+position = Vector2(385, 331)
 scale = Vector2(11.7246, 11.8594)
 sprite_frames = SubResource("SpriteFrames_xs0gr")
 
 [node name="Area2D" type="Area2D" parent="ClickableSprite"]
-position = Vector2(2.38814, -4.13174)
+position = Vector2(2.81459, -4.13174)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableSprite/Area2D"]
 position = Vector2(11.8554, 5.56522)
