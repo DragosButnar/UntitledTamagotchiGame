@@ -90,12 +90,12 @@ anchors_preset = 0
 script = SubResource("GDScript_247v1")
 
 [node name="ClickableSprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(402, 350)
+position = Vector2(496, 355)
 scale = Vector2(11.7246, 11.8594)
 sprite_frames = SubResource("SpriteFrames_xs0gr")
 
 [node name="Area2D" type="Area2D" parent="ClickableSprite"]
-position = Vector2(2.55872, -4.13175)
+position = Vector2(2.38814, -4.13174)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableSprite/Area2D"]
 position = Vector2(11.8554, 5.56522)
@@ -123,9 +123,10 @@ text = "Give items"
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -31.0
-offset_right = 46.0
-offset_bottom = 49.0
+offset_left = 3.0
+offset_top = -77.0
+offset_right = 54.0
+offset_bottom = 3.0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 24
 text = "Exit"
@@ -136,9 +137,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -8.0
-offset_top = -8.0
-offset_bottom = 72.0
+offset_left = -67.0
+offset_top = -62.0
+offset_right = 8.0
+offset_bottom = -1.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 24
