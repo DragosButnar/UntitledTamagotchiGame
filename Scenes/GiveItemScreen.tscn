@@ -11,7 +11,7 @@ script/source = "extends Control
 @onready var lacreatura = $ClickableSprite
 @onready var hbox = $CanvasLayer/ItemListContainer/HBoxContainer
 @onready var back_button = $GoBackButton
-const ListItem = preload(\"res://Scenes/ListItem.tscn\")
+const ListItem = preload(FilePaths.LIST_ITEM_PATH)
 
 func _ready():
 	# Connect area input

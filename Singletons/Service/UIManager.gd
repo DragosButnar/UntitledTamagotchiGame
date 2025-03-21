@@ -33,4 +33,4 @@ func exit():
 	get_tree().quit(0)
 
 func _ready() -> void:
-	_current_scene_path = "res://Scenes/LaCreaturaScene.tscn"
+	_current_scene_path = FilePaths.MAIN_SCREEN_PATH

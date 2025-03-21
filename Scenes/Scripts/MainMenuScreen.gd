@@ -18,10 +18,10 @@ func _ready() -> void:
 	exit_button.pressed.connect(_on_ExitButton_pressed)
 
 func _on_LaCreaturaButton_pressed():
-	UiManager.show_screen("res://Scenes/LaCreaturaScene.tscn")
+	UiManager.show_screen(FilePaths.LACREATURA_SCENE_PATH)
 
 func _on_ShopButton_pressed():
-	UiManager.show_screen("res://Scenes/ShopeScene.tscn")
+	UiManager.show_screen(FilePaths.SHOP_SCENE_PATH)
 	
 func _on_ExitButton_pressed():
 	UiManager.exit()
