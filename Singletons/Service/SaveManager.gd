@@ -5,9 +5,9 @@ static func save_all() -> void:
 
 static func _save_inventory() -> void:
 	var file = FileAccess.open(FilePaths.SAVE_PATH, FileAccess.WRITE)
-	print(file)
 	if file:
-		file.store_string(JSON.stringify("test"))
+		file.store_string(JSON.stringify(Player.check_inventory()))
+		file.close()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
