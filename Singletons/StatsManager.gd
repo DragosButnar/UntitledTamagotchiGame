@@ -27,12 +27,12 @@ const MOOD_THRESHOLDS := {
 }
 
 # Backing variables for property setters
-var _mood_value: int = 0
-var _hunger: int = 0
-var _thirst: int = 0
-var _loneliness: int = 0
-var _energy: int = 100
-var mood_name: String = "OK"
+var _mood_value: int
+var _hunger: int
+var _thirst: int
+var _loneliness: int
+var _energy: int
+var mood_name: String
 
 # Property setters with automatic clamping and logging
 @export var mood_value: int = 0:
@@ -132,6 +132,3 @@ func update_mood_name() -> void:
 				mood_name = mood
 				print("Mood changed to: %s" % mood_name)
 			return
-
-func _ready() -> void:
-	update_mood_name()

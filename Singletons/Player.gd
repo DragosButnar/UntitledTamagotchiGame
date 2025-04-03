@@ -2,8 +2,8 @@ extends Node
 
 
 # Basic properties
-static var currency: int = 100
-static var inventory: Dictionary[String, int] = {"apple": 1}
+static var currency: int
+static var inventory: Dictionary[String, int]
 
 # Called when the node enters the scene tree for the first time
 func _ready():
@@ -17,6 +17,8 @@ static func add_currency(amount: int):
 
 # Subtract currency if possible. Returns true on success, false if not enough.
 static func remove_currency(amount: int) -> bool:
+	if GameManager.is_infinite_money_toggled():
+		return true
 	if currency >= amount:
 		currency -= amount
 		print("Player currency updated:", currency)
@@ -62,4 +64,10 @@ static func check_inventory() -> Dictionary[String, int]:
 	
 static func get_currency() -> int:
 	return currency
-			
+	
+static func set_currency(value: int) -> void:
+	currency = value
+	
+static func load_inventory(items: Dictionary):
+	for key in items.keys():
+		add_item(key, int(items[key]))

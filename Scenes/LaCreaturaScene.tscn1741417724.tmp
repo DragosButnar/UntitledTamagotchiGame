@@ -29,12 +29,11 @@ func _ready():
 	# Set collision shape to match frame size
 	##var frame_size = $ClickableSprite.sprite_frames.get_frame_texture(\"default\", 0).get_size()
 	##$ClickableSprite/Area2D/CollisionShape2D.shape.size = frame_size
-		
+	
+
+	
 	# Connect area input
 	$ClickableSprite/Area2D.input_event.connect(_on_sprite_clicked)
-
-func _process(delta: float) -> void:
-	infinite_money_button.set_pressed(GameManager.is_infinite_money_toggled())
 
 func _on_sprite_clicked(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.pressed:

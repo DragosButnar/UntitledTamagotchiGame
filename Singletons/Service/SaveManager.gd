@@ -4,7 +4,7 @@ extends Node
 static func save_all() -> void:
 	var save_data := {
 		"player": _get_player_data(),
-		"lacreatura": _get_lacreatura_data()
+		"stats": _get_lacreatura_data()
 	}
 	
 	var file = FileAccess.open(FilePaths.SAVE_PATH, FileAccess.WRITE)
@@ -25,7 +25,7 @@ static func load_all() -> void:
 		if parse_result == OK:
 			var save_data = json.data
 			_load_player_data(save_data.get("player", {}))
-			_load_lacreatura_data(save_data.get("lacreatura", {}))
+			_load_lacreatura_data(save_data.get("stats", {}))
 		else:
 			print("JSON Parse Error: ", json.get_error_message())
 		file.close()
@@ -52,5 +52,4 @@ static func _load_player_data(data: Dictionary) -> void:
 
 # Creature data loading
 static func _load_lacreatura_data(data: Dictionary) -> void:
-	if "stats" in data:
-		StatsManager.set_stats(data["stats"])
+	StatsManager.set_stats(data)
