@@ -44,11 +44,12 @@ func _on_sprite_clicked(viewport, event, shape_idx):
 
 func _on_top_right_pressed():
 	print(\"Top Right Button Pressed\")
-	UiManager.show_screen(\"res://Scenes/GiveItemScreen.tscn\")
+	UiManager.show_screen(FilePaths.GIVE_ITEM_SCENE_PATH)
 
 
 func _on_bottom_right_pressed():
 	print(\"Bottom Right Button Pressed\")
+	UiManager.show_screen(FilePaths.LESSON_SELECT_SCENE_PATH)
 	
 func start_animation():
 	lacreatura.play(\"default\")
@@ -61,7 +62,7 @@ func set_animation_speed(speed: float):
 	
 func _on_ShopButton_pressed():
 	print(\"Top Left Button Pressed\")
-	UiManager.show_screen(\"res://Scenes/ShopScene.tscn\")
+	UiManager.show_screen(FilePaths.SHOP_SCENE_PATH)
 	
 func _on_ExitButton_pressed():
 	print(\"Bottom Left Button Pressed\")
