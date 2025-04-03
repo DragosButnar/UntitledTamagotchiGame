@@ -46,7 +46,6 @@ func update_position_overlay(edited_node):
 	position = edited_node.global_position - edited_node.get_viewport().get_visible_rect().position
 	centered = false
 	scale = edited_node.global_scale if edited_node is Node2D else edited_node.scale
-	# TODO: fetch source's actual on-screen position.
 	update_texture_view_rect()
 
 

@@ -7,8 +7,7 @@ static var inventory: Dictionary[String, int]
 
 # Called when the node enters the scene tree for the first time
 func _ready():
-	print("Player ready with currency:", currency)
-	##TODO: Load data from DB
+	return
 
 # Add currency to the player
 static func add_currency(amount: int):
