@@ -35,6 +35,19 @@ version_control/autoload_on_startup=true
 
 enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/godot-sqlite/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://Common/": "gray",
+"res://Model/": "blue",
+"res://Resources/": "orange",
+"res://Scenes/": "green",
+"res://Shortcuts/": "red",
+"res://Singletons/": "purple",
+"res://Sprites/": "pink",
+"res://addons/": "gray"
+}
+
 [rendering]
 
 renderer/rendering_method="mobile"
