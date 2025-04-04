@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://e1kqpuwy4f15"]
+[gd_scene load_steps=4 format=3 uid="uid://e1kqpuwy4f15"]
 
 [ext_resource type="Script" uid="uid://chsx6qtdh86d2" path="res://Scenes/Scripts/ShopScene.gd" id="1_x7s06"]
 [ext_resource type="Script" uid="uid://bmbook1sf7fa" path="res://Scenes/Scripts/Shop.gd" id="2_ggt0q"]
+[ext_resource type="Shortcut" uid="uid://c2biw5174i2sc" path="res://Shortcuts/EscapeKey.tres" id="2_s85eg"]
 
 [node name="ShopScene" type="Control"]
 layout_mode = 3
@@ -33,6 +34,7 @@ layout_mode = 2
 [node name="BackButton" type="Button" parent="PanelContainer"]
 layout_mode = 2
 size_flags_vertical = 8
+shortcut = ExtResource("2_s85eg")
 text = "Back..."
 
 [node name="Shop" type="Node" parent="."]

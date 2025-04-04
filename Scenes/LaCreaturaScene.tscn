@@ -1,27 +1,31 @@
-[gd_scene load_steps=8 format=3 uid="uid://ckwlnr6xoexch"]
+[gd_scene load_steps=10 format=3 uid="uid://ckwlnr6xoexch"]
 
 [ext_resource type="Texture2D" uid="uid://ohl6p5mcivb0" path="res://Sprites/slime_char/package/sprites/aqua/ready_1.png" id="1_6govx"]
 [ext_resource type="Texture2D" uid="uid://b4an77mmahrvk" path="res://Sprites/slime_char/package/sprites/aqua/ready_2.png" id="2_tr3wi"]
 [ext_resource type="Texture2D" uid="uid://covplq5jyeuwt" path="res://Sprites/slime_char/package/sprites/aqua/ready_3.png" id="3_u7olw"]
 [ext_resource type="Texture2D" uid="uid://cw426sdjweyqs" path="res://Sprites/slime_char/package/sprites/aqua/ready_4.png" id="4_ila8h"]
+[ext_resource type="Shortcut" uid="uid://c2biw5174i2sc" path="res://Shortcuts/EscapeKey.tres" id="5_8xu0e"]
+[ext_resource type="Shortcut" uid="uid://cqtokc0kyy2fh" path="res://Shortcuts/TideKey.tres" id="6_xer1j"]
 
 [sub_resource type="GDScript" id="GDScript_247v1"]
 script/source = "extends Control
 
-@onready var shop_button = $CanvasLayer/TopLeftButton
-@onready var exit_button = $CanvasLayer/BottomLeftButton
 @onready var lacreatura = $ClickableSprite
-@onready var top_right = $CanvasLayer/TopRightButton
-@onready var bottom_right = $CanvasLayer/BottomRightButton
 
+@onready var shop_button = %ShopButton
+@onready var exit_button = %ExitButton
+@onready var give_items_button = %ItemButton
+@onready var lesson_button = %LessonButton
+@onready var activity_button = %ActivityButton
 
-@onready var infinite_money_button = $CheatLayer/InfiniteMoneyButton
+@onready var infinite_money_button = %InfiniteMoneyButton
 
 func _ready():
 	shop_button.pressed.connect(_on_ShopButton_pressed)
 	exit_button.pressed.connect(_on_ExitButton_pressed)
-	top_right.pressed.connect(_on_top_right_pressed)
-	bottom_right.pressed.connect(_on_bottom_right_pressed)
+	give_items_button.pressed.connect(_on_give_items_button_pressed)
+	lesson_button.pressed.connect(_on_lesson_button_pressed)
+	activity_button.pressed.connect(_on_activity_button_pressed)
 	
 	infinite_money_button.pressed.connect(_on_infinite_money_pressed)
 	
@@ -42,14 +46,15 @@ func _on_sprite_clicked(viewport, event, shape_idx):
 			print(\"Sprite clicked!\")
 
 
-func _on_top_right_pressed():
-	print(\"Top Right Button Pressed\")
+func _on_give_items_button_pressed():
 	UiManager.show_screen(FilePaths.GIVE_ITEM_SCENE_PATH)
 
 
-func _on_bottom_right_pressed():
-	print(\"Bottom Right Button Pressed\")
+func _on_lesson_button_pressed():
 	UiManager.show_screen(FilePaths.LESSON_SELECT_SCENE_PATH)
+	
+func _on_activity_button_pressed():
+	UiManager.show_screen(FilePaths.ACTIVITY_SELECT_SCENE_PATH)
 	
 func start_animation():
 	lacreatura.play(\"default\")
@@ -61,11 +66,9 @@ func set_animation_speed(speed: float):
 	lacreatura.sprite_frames.set_animation_speed(\"default\", speed)
 	
 func _on_ShopButton_pressed():
-	print(\"Top Left Button Pressed\")
 	UiManager.show_screen(FilePaths.SHOP_SCENE_PATH)
 	
 func _on_ExitButton_pressed():
-	print(\"Bottom Left Button Pressed\")
 	UiManager.exit()
 	
 func _on_infinite_money_pressed():
@@ -113,51 +116,61 @@ shape = SubResource("CircleShape2D_tee3r")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="TopLeftButton" type="Button" parent="CanvasLayer"]
-offset_right = 47.0
-offset_bottom = 80.0
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -236.0
+offset_top = -42.0
+offset_right = 236.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ShopButton" type="Button" parent="CanvasLayer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Shop"
 
-[node name="TopRightButton" type="Button" parent="CanvasLayer"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -90.0
-offset_bottom = 80.0
-grow_horizontal = 0
+[node name="ItemButton" type="Button" parent="CanvasLayer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Give items"
 
-[node name="BottomLeftButton" type="Button" parent="CanvasLayer"]
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 3.0
-offset_top = -77.0
-offset_right = 54.0
-offset_bottom = 3.0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 24
-text = "Exit"
-
-[node name="BottomRightButton" type="Button" parent="CanvasLayer"]
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -101.0
-offset_top = -61.0
-offset_right = -1.0
-grow_horizontal = 0
-grow_vertical = 0
+[node name="LessonButton" type="Button" parent="CanvasLayer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Lessons"
+
+[node name="ActivityButton" type="Button" parent="CanvasLayer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "Activities"
+
+[node name="ExitButton" type="Button" parent="CanvasLayer"]
+unique_name_in_owner = true
+offset_left = 5.0
+offset_top = 3.0
+offset_right = 56.0
+offset_bottom = 45.0
+theme_override_font_sizes/font_size = 24
+shortcut = ExtResource("5_8xu0e")
+text = "Exit"
 
 [node name="CheatLayer" type="CanvasLayer" parent="."]
 
 [node name="InfiniteMoneyButton" type="CheckButton" parent="CheatLayer"]
+unique_name_in_owner = true
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -165,3 +178,4 @@ offset_left = -22.0
 offset_right = 22.0
 offset_bottom = 43.0
 grow_horizontal = 2
+shortcut = ExtResource("6_xer1j")
