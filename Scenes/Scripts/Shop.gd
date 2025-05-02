@@ -31,8 +31,8 @@ func buy(item_data: ResourceInterface) -> bool:
 	var name = item_data.get_internal_name()
 	
 	# Check if player has enough currency
-	if Player.remove_currency(cost):
-		Player.add_item(name, 1)
+	if PlayerManager.remove_currency(cost):
+		PlayerManager.add_item(name, 1)
 		return true
 	else:
 		return false
@@ -45,9 +45,9 @@ func sell(item_data: ResourceInterface) -> bool:
 	var name = item_data.get_internal_name()
 	
 	# Check if player has the item
-	if Player.remove_item(name, 1):
+	if PlayerManager.remove_item(name, 1):
 		# Give back some money (could be partial or full cost)
-		Player.add_currency(int(cost * SELL_COST_MODIFIER))
+		PlayerManager.add_currency(int(cost * SELL_COST_MODIFIER))
 		return true
 	else:
 		return false

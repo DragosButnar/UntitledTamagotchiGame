@@ -3,7 +3,7 @@ extends Node
 # Save all game data into a structured JSON file
 static func save_all() -> void:
 	var save_data := {
-		"player": _get_player_data(),
+		"PlayerManager": _get_player_data(),
 		"stats": _get_lacreatura_data()
 	}
 	
@@ -24,17 +24,17 @@ static func load_all() -> void:
 		var parse_result = json.parse(file.get_as_text())
 		if parse_result == OK:
 			var save_data = json.data
-			_load_player_data(save_data.get("player", {}))
+			_load_player_data(save_data.get("PlayerManager", {}))
 			_load_lacreatura_data(save_data.get("stats", {}))
 		else:
 			print("JSON Parse Error: ", json.get_error_message())
 		file.close()
 
-# Player data collection
+# PlayerManager data collection
 static func _get_player_data() -> Dictionary:
 	return {
-		"inventory": Player.check_inventory(),
-		"currency": Player.get_currency()
+		"inventory": PlayerManager.check_inventory(),
+		"currency": PlayerManager.get_currency()
 	}
 
 # Creature data collection
@@ -43,12 +43,12 @@ static func _get_lacreatura_data() -> Dictionary:
 	return stats
 	
 
-# Player data loading
+# PlayerManager data loading
 static func _load_player_data(data: Dictionary) -> void:
 	if "inventory" in data:
-		Player.load_inventory(data["inventory"])
+		PlayerManager.load_inventory(data["inventory"])
 	if "currency" in data:
-		Player.set_currency(data["currency"])
+		PlayerManager.set_currency(data["currency"])
 
 # Creature data loading
 static func _load_lacreatura_data(data: Dictionary) -> void:

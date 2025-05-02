@@ -1,0 +1,371 @@
+[gd_scene load_steps=13 format=3 uid="uid://vfxv1sarskgj"]
+
+[ext_resource type="Texture2D" uid="uid://ohl6p5mcivb0" path="res://Assets/slime/ready/ready_1.png" id="1_d3wef"]
+[ext_resource type="Texture2D" uid="uid://b4an77mmahrvk" path="res://Assets/slime/ready/ready_2.png" id="2_o4126"]
+[ext_resource type="Texture2D" uid="uid://covplq5jyeuwt" path="res://Assets/slime/ready/ready_3.png" id="3_lkdrv"]
+[ext_resource type="Texture2D" uid="uid://cw426sdjweyqs" path="res://Assets/slime/ready/ready_4.png" id="4_p7iby"]
+[ext_resource type="Texture2D" uid="uid://dc55hor7ix15" path="res://Assets/stamina_circle.png" id="5_qu4a1"]
+[ext_resource type="Texture2D" uid="uid://hql524qstrtx" path="res://Assets/dash_indicator.png" id="6_70d11"]
+[ext_resource type="Material" uid="uid://uu12j3dxtuh6" path="res://Assets/dash_glare.tres" id="6_cw2d6"]
+[ext_resource type="Texture2D" uid="uid://bvgo5leuwniu5" path="res://Assets/dash_particle.png" id="8_khinc"]
+
+[sub_resource type="GDScript" id="GDScript_e80uo"]
+script/source = "# Player.gd
+extends CharacterBody2D
+
+
+signal ball_hit(direction: Vector2, strength: float)
+
+@export var player_id := 1
+# Movement Settings
+@export var base_speed := 400.0
+@export var sprint_speed := 600.0
+@export var dash_speed := 1500.0
+@export var acceleration := 3000.0
+@export var friction := 2000.0
+@export var dash_duration := 0.2
+@export var dash_cooldown := 2.0
+@export var stamina_regen_rate := 40.0
+@export var stamina_drain_rate := 60.0
+
+@export var flip_h : bool = false
+
+@export var color_pallete : CompressedTexture2D = null
+
+# Nodes
+@onready var dash_cooldown_timer := %DashCooldownTimer
+@onready var dash_duration_timer := %DashDurationTimer
+@onready var dash_indicator := %DashIndicator
+@onready var stamina_bar := %StaminaBar
+@onready var sprite := %AnimatedSprite2D
+@onready var dash_particles:= %DashParticles
+
+# State
+var current_speed := base_speed
+var is_sprinting := false
+var can_dash := true
+var is_dashing := false
+var dash_direction := Vector2.ZERO
+var stamina := 100.0
+var last_move_direction := 1 # 1 right, -1 left
+
+func _ready():
+	# Configure GPUParticles2D node
+	dash_particles.lifetime = dash_duration  # Match dash duration
+	dash_particles.amount = 35
+	dash_particles.preprocess = 0.5
+	dash_particles.speed_scale = 1.0
+	
+	last_move_direction = -1 if flip_h else 1
+	sprite.flip_h = flip_h
+	
+	
+	# Create and configure material
+	var pm = ParticleProcessMaterial.new()
+	pm.direction = Vector3(1, 0, 0)
+	pm.spread = 25
+	pm.initial_velocity_min = 380.0
+	pm.initial_velocity_max = 420.0
+	pm.linear_accel_min = -200.0
+	pm.linear_accel_max = -200.0
+	pm.scale_min = 0.3
+	pm.scale_max = 0.5
+	pm.color_ramp = create_particle_gradient()
+	
+	dash_particles.process_material = pm
+	dash_particles.emitting = false
+	
+	# Initialize timers
+	dash_cooldown_timer.timeout.connect(_on_dash_cooldown_timer_timeout)
+	dash_duration_timer.timeout.connect(_on_dash_duration_timeout)
+	dash_cooldown_timer.wait_time = dash_cooldown
+	dash_duration_timer.wait_time = dash_duration
+	
+	# Initial values
+	stamina = 100.0
+	can_dash = true
+	update_ui()
+	dash_indicator.value = 100.0
+	stamina_bar.value = 100.0
+	
+	if color_pallete:
+		var pallete = PaletteMaterial.new()
+		pallete.set_palette(color_pallete)
+		sprite.material = pallete
+		
+
+func _physics_process(delta):
+	handle_input(delta)
+	handle_movement(delta)
+	handle_stamina(delta)
+	update_ui()
+	move_and_slide()
+	update_animations()
+	update_particles()
+
+func handle_input(delta):
+	var input_vector = get_input_vector()
+	
+	if is_dashing:
+		input_vector = dash_direction
+	
+	is_sprinting = Input.is_action_pressed(\"p%d_sprint\" % player_id) && stamina > 0
+	current_speed = sprint_speed if is_sprinting else base_speed
+	
+	if Input.is_action_just_pressed(\"p%d_dash\" % player_id) && can_dash:
+		start_dash()
+		
+	if !is_dashing:
+		velocity = velocity.move_toward(input_vector * current_speed, acceleration * delta)
+
+func start_dash():
+	dash_direction = get_effective_direction()
+	dash_particles.rotation = dash_direction.angle() + PI
+	dash_particles.emitting = true
+	dash_particles.restart()
+	
+	can_dash = false
+	is_dashing = true
+	velocity = dash_direction * dash_speed
+	current_speed = dash_speed
+	dash_duration_timer.start()
+	dash_cooldown_timer.start()
+	dash_indicator.material.set_shader_parameter(\"active\", false)
+
+func get_effective_direction() -> Vector2:
+	if velocity.length() > 10:
+		return velocity.normalized()
+	
+	var input_dir = get_input_vector().normalized()
+	return input_dir if input_dir != Vector2.ZERO else Vector2.RIGHT
+
+func update_particles():
+	if is_dashing:
+		# Update rotation based on current velocity
+		var current_dir = velocity.normalized()
+		dash_particles.rotation = current_dir.angle() + PI
+	elif dash_particles.emitting:
+		dash_particles.emitting = false
+
+func handle_movement(delta):
+	if velocity.length() < 10:
+		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+
+func handle_stamina(delta):
+	if is_sprinting:
+		stamina = max(stamina - stamina_drain_rate * delta, 0)
+		if stamina <= 0:
+			is_sprinting = false
+	else:
+		stamina = min(stamina + stamina_regen_rate * delta, 100)
+
+func update_ui():
+	dash_indicator.value = 100.0 if can_dash else 100 - (dash_cooldown_timer.time_left / dash_cooldown) * 100
+	stamina_bar.value = stamina
+	dash_indicator.material.set_shader_parameter(\"active\", can_dash)
+
+func update_animations():
+	if velocity.length() > 10:
+		# Only update direction when moving horizontally
+		if abs(velocity.x) > 0:
+			var new_direction = sign(velocity.x)
+			if new_direction != last_move_direction:
+				last_move_direction = new_direction
+				sprite.flip_h = new_direction < 0
+				
+		sprite.play(\"sprint\" if is_sprinting else \"run\")
+	else:
+		# Maintain last direction when idle
+		sprite.flip_h = last_move_direction < 0
+		sprite.play(\"idle\")
+
+func _on_dash_duration_timeout():
+	is_dashing = false
+	current_speed = base_speed
+	velocity = velocity.normalized() * base_speed
+	dash_particles.emitting = false
+
+func _on_dash_cooldown_timer_timeout():
+	can_dash = true
+	dash_indicator.value = 100.0
+
+func _on_body_entered(body):
+	if body.name == \"Ball\":
+		var direction = (body.position - position).normalized()
+		var strength = velocity.length()
+		emit_signal(\"ball_hit\", direction, strength)
+
+
+func get_input_vector() -> Vector2:
+	return Vector2(
+		Input.get_action_strength(\"p%d_right\" % player_id) - 
+		Input.get_action_strength(\"p%d_left\" % player_id),
+		Input.get_action_strength(\"p%d_down\" % player_id) - 
+		Input.get_action_strength(\"p%d_up\" % player_id)
+	).normalized()
+
+
+func create_particle_gradient() -> Gradient:
+	var gradient = Gradient.new()
+	gradient.add_point(0.0, Color(1, 1, 1, 1))
+	gradient.add_point(0.3, Color(1, 0.8, 0.2, 0.8))
+	gradient.add_point(0.6, Color(1, 0.4, 0.1, 0.4))
+	gradient.add_point(1.0, Color(1, 0, 0, 0))
+	return gradient
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_70d11"]
+radius = 10.5
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wi0c6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_d3wef")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_o4126")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_lkdrv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_p7iby")
+}],
+"loop": true,
+"name": &"dashing",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_d3wef")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_o4126")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_lkdrv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_p7iby")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_d3wef")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_o4126")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_lkdrv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_p7iby")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_d3wef")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_o4126")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_lkdrv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_p7iby")
+}],
+"loop": false,
+"name": &"sprint",
+"speed": 5.0
+}]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bruh7"]
+particle_flag_disable_z = true
+angle_min = 1.07288e-05
+angle_max = 180.0
+initial_velocity_min = 300.0
+initial_velocity_max = 500.0
+gravity = Vector3(0, 0, 0)
+linear_accel_min = -200.0
+linear_accel_max = -100.0
+damping_min = 150.0
+damping_max = 150.0
+scale_min = 0.1
+scale_max = 0.5
+
+[node name="CharacterBody2D" type="CharacterBody2D" groups=["players"]]
+scale = Vector2(2.21815, 2.21815)
+collision_mask = 7
+platform_wall_layers = 4
+script = SubResource("GDScript_e80uo")
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 10
+position = Vector2(0.5, 0)
+shape = SubResource("CircleShape2D_70d11")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_wi0c6")
+animation = &"sprint"
+metadata/_edit_group_ = true
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 5.0
+offset_top = -10.0
+offset_right = 38.0
+offset_bottom = 23.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.151053, 0.151053)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="StaminaBar" type="TextureProgressBar" parent="CenterContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+fill_mode = 5
+texture_under = ExtResource("5_qu4a1")
+texture_progress = ExtResource("5_qu4a1")
+tint_under = Color(0.361575, 0.361575, 0.361575, 1)
+tint_progress = Color(0.054902, 0.803922, 0, 1)
+metadata/_edit_group_ = true
+
+[node name="DashIndicator" type="TextureProgressBar" parent="CenterContainer"]
+unique_name_in_owner = true
+material = ExtResource("6_cw2d6")
+layout_mode = 2
+fill_mode = 3
+texture_progress = ExtResource("6_70d11")
+tint_under = Color(1, 1, 1, 0)
+tint_over = Color(1, 1, 1, 0)
+metadata/_edit_group_ = true
+
+[node name="DashDurationTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[node name="DashCooldownTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[node name="DashParticles" type="GPUParticles2D" parent="."]
+unique_name_in_owner = true
+amount = 30
+texture = ExtResource("8_khinc")
+lifetime = 0.3
+process_material = SubResource("ParticleProcessMaterial_bruh7")

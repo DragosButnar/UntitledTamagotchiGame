@@ -1,0 +1,155 @@
+[gd_scene load_steps=9 format=3 uid="uid://bvbnb2megcros"]
+
+[ext_resource type="Texture2D" uid="uid://ohl6p5mcivb0" path="res://Assets/slime/ready/ready_1.png" id="1_x3nm1"]
+[ext_resource type="Texture2D" uid="uid://b4an77mmahrvk" path="res://Assets/slime/ready/ready_2.png" id="2_lpa5a"]
+[ext_resource type="Texture2D" uid="uid://covplq5jyeuwt" path="res://Assets/slime/ready/ready_3.png" id="3_8f2nq"]
+[ext_resource type="Texture2D" uid="uid://cw426sdjweyqs" path="res://Assets/slime/ready/ready_4.png" id="4_mj0o7"]
+[ext_resource type="Shortcut" uid="uid://c2biw5174i2sc" path="res://Shortcuts/EscapeKey.tres" id="5_krhr0"]
+
+[sub_resource type="GDScript" id="GDScript_e7o6j"]
+script/source = "extends Control
+
+@onready var lacreatura = %ClickableSprite
+@onready var area2D = %Area2D
+@onready var hbox = %HBoxContainer
+@onready var back_button = %GoBackButton
+const ListItem = preload(FilePaths.LIST_ITEM_PATH)
+
+func _ready():
+	# Connect area input
+	area2D.input_event.connect(_on_sprite_clicked)
+	back_button.pressed.connect(NavigationManager.go_back)
+	
+	lacreatura.play(\"default\")  # Auto-play animation
+	# Set collision shape to match frame size
+	var frame_size = lacreatura.sprite_frames.get_frame_texture(\"default\", 0).get_size()
+	#var circle_shape = CircleShape2D.new()
+	#circle_shape.radius = max(frame_size.x, frame_size.y) / 2
+	#$ClickableSprite/Area2D/CollisionShape2D.shape = circle_shape
+	
+	var items = Player.check_inventory()
+	
+	# Initialize item list
+	for resource_name in items.keys():
+		var resource = GameManager.get_resource_by_name(resource_name)
+		if not resource:
+			push_error(\"Missing resource: %s\" % resource_name)
+			continue
+		
+		var list_item = ListItem.instantiate()
+		list_item.setup(resource)
+		hbox.add_child(list_item)
+	
+
+func _on_sprite_clicked(viewport, event, shape_idx):
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			print(\"Sprite clicked!\")
+
+
+
+	
+func start_animation():
+	if lacreatura.sprite_frames.has_animation(\"default\"):
+		lacreatura.play(\"default\")
+
+func set_animation_speed(speed: float):
+	if lacreatura.sprite_frames:
+		lacreatura.sprite_frames.set_animation_speed(\"default\", speed)
+
+func stop_animation():
+	lacreatura.stop()
+	
+	
+func _on_item_drag_started(item):
+	#$CanvasLayer/ItemListContainer.scroll_horizontal_enabled = false
+	return
+
+func _on_item_drag_ended(item):
+	#$CanvasLayer/ItemListContainer.scroll_horizontal_enabled = true
+	return
+	
+func _on_BackButton_pressed():
+	print(\"Bottom Left Button Pressed\")
+	NavigationManager.exit()
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_h81xj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_x3nm1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_lpa5a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_8f2nq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_mj0o7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6umhc"]
+
+[node name="GiveItemScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1152.0
+offset_bottom = -648.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_e7o6j")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ItemListContainer" type="ScrollContainer" parent="CanvasLayer"]
+custom_minimum_size = Vector2(200, 100)
+layout_direction = 2
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -108.0
+offset_right = 1155.0
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/ItemListContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="GoBackButton" type="Button" parent="CanvasLayer"]
+unique_name_in_owner = true
+offset_right = 125.0
+offset_bottom = 43.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 25
+shortcut = ExtResource("5_krhr0")
+text = "Go back..."
+
+[node name="ClickableSprite" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+top_level = true
+position = Vector2(576, 320)
+scale = Vector2(12, 12)
+sprite_frames = SubResource("SpriteFrames_h81xj")
+frame_progress = 0.808585
+metadata/_edit_group_ = true
+
+[node name="Area2D" type="Area2D" parent="ClickableSprite"]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableSprite/Area2D"]
+shape = SubResource("CircleShape2D_6umhc")

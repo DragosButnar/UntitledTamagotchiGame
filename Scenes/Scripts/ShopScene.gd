@@ -46,10 +46,10 @@ func _ready():
 
 
 func _process(delta: float) -> void:
-	currency_label.text = str(Player.currency)
+	currency_label.text = str(PlayerManager.currency)
 
 func _on_BackButton_pressed():
-	UiManager.go_back()
+	NavigationManager.go_back()
 
 func _on_BuyButton_pressed(button: Button):
 	print("Button pressed")

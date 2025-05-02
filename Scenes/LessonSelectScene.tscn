@@ -11,7 +11,7 @@ script/source = "extends Node
 var data = [\"l1\",\"l2\", \"l3\"]
 
 func _ready() -> void:
-	go_back_button.pressed.connect(UiManager.go_back)
+	go_back_button.pressed.connect(NavigationManager.go_back)
 
 	for index in data.size():
 		var button = Button.new()

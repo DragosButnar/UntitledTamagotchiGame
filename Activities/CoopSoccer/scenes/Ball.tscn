@@ -1,0 +1,130 @@
+[gd_scene load_steps=4 format=3 uid="uid://bip5ohmubkmc1"]
+
+[ext_resource type="Texture2D" uid="uid://faeu6hd86p3v" path="res://Assets/ball_soccer2.png" id="1_nsjos"]
+
+[sub_resource type="GDScript" id="GDScript_ja1hk"]
+script/source = "class_name Ball
+extends CharacterBody2D
+
+@export var max_speed := 1500.0
+@export var acceleration := 800.0
+@export var friction := 0.97
+@export var bounce_factor := 0.8
+@export var kick_factor := 5
+@export var preservation_factor := 0.8
+@export var radius := 16
+
+var was_touching_wall := false # Tracks previous frame
+
+func _ready():
+	# Connect player signals
+	var players = get_tree().get_nodes_in_group(\"players\")
+	for player in players:
+		player.ball_hit.connect(on_player_hit)
+
+func _physics_process(delta):
+	var velocity_normalized = velocity.normalized()
+	var angular_speed = velocity.length() / radius
+	var rotation_direction = velocity_normalized.x * velocity_normalized.y
+	rotation += angular_speed * delta * rotation_direction
+	
+	# Apply friction with delta consideration
+	velocity *= pow(friction, delta * 60)
+	
+	# Limit maximum speed
+	if velocity.length() > max_speed:
+		velocity = velocity.normalized() * max_speed
+	
+	# Move and handle collisions
+	move_and_slide()
+	handle_collisions(delta)
+
+func handle_collisions(delta):
+	var touched_wall = false
+	
+	for i in get_slide_collision_count():
+		var collision = get_slide_collision(i)
+		var collider = collision.get_collider()
+		
+		# Bounce off players and world borders
+		if collider.is_in_group(\"players\"):
+			handle_bounce(collision)
+		if collider.is_in_group(\"walls\"):
+			handle_wall_bounce(collision)
+			touched_wall = true
+		if collider.is_in_group(\"goals\"):
+			handle_goal(collider)
+	
+	if touched_wall:
+		if not was_touching_wall:
+			CoopSoccerManager.wall_touched.emit()
+			was_touching_wall = true
+	else:
+		if was_touching_wall:
+			CoopSoccerManager.wall_left.emit()
+			was_touching_wall = false
+ 
+func handle_bounce(collision: KinematicCollision2D):
+	var normal = collision.get_normal()
+	var collider_velocity = collision.get_collider_velocity()
+	
+	# Calculate bounce with energy preservation and kick factor
+	var speed_before = velocity.length()
+	var bounce_velocity = velocity.bounce(normal) * bounce_factor
+	var kick_velocity = collider_velocity * kick_factor
+	
+	velocity += bounce_velocity + kick_velocity
+	
+	# Preserve minimum 80% of original speed
+	if velocity.length() < speed_before * preservation_factor:
+		velocity += velocity.normalized() * speed_before * preservation_factor
+		
+func handle_wall_bounce(collision: KinematicCollision2D):
+	var normal = collision.get_normal()
+	var speed_before = velocity.length()
+	
+	print(velocity)
+	velocity = velocity.bounce(normal) * bounce_factor
+	print(velocity)
+	
+	if velocity.length() < speed_before * preservation_factor:
+		velocity = velocity.normalized() * speed_before * preservation_factor
+
+func apply_force(direction: Vector2, strength: float):
+	velocity += direction.normalized() * strength * acceleration
+
+func handle_goal(goal):
+	var scoring_player = 1 if \"P1Goal\" in goal.name else 2
+	CoopSoccerManager.player_scored.emit(scoring_player)
+	reset_ball()
+
+func set_current_velocity(v: Vector2):
+	velocity = v
+
+func reset_ball():
+	velocity = Vector2.ZERO
+	position = CoopSoccerManager.BALL_STARTING_POSITION  # Set this in your CoopSoccerManager
+
+func on_player_hit(direction: Vector2, strength: float):
+	apply_force(direction, strength)
+
+func _on_game_scene_game_paused() -> void:
+	set_physics_process(false)
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ul5l2"]
+radius = 16.0
+
+[node name="Ball" type="CharacterBody2D" groups=["ball"]]
+collision_layer = 2
+collision_mask = 5
+motion_mode = 1
+safe_margin = 1.0
+script = SubResource("GDScript_ja1hk")
+
+[node name="Sprite2D" type="Sprite2D" parent="." groups=["ball"]]
+texture = ExtResource("1_nsjos")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["ball"]]
+z_index = 10
+shape = SubResource("CircleShape2D_ul5l2")

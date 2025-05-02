@@ -1,0 +1,19 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://uu12j3dxtuh6"]
+
+[sub_resource type="Shader" id="Shader_i2heo"]
+code = "shader_type canvas_item;
+uniform bool active;
+
+void fragment() {
+    vec4 base = texture(TEXTURE, UV);
+    if (active) {
+        float pulse = sin(TIME * 8.0) * 0.5 + 0.5;
+        COLOR = vec4(base.rgb * (1.0 + pulse * 0.3), base.a);
+    } else {
+        COLOR = base;
+    }
+}"
+
+[resource]
+shader = SubResource("Shader_i2heo")
+shader_parameter/active = false

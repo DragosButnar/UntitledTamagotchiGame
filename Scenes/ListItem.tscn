@@ -18,13 +18,13 @@ func _gui_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			print(\"Item: \" + resource.get_display_name() + \" clicked\")
 			_use_item()
-			var result = Player.check_inventory_for_resource(resource.get_internal_name())
+			var result = PlayerManager.check_inventory_for_resource(resource.get_internal_name())
 			if result == 0:
 				queue_free()
 
 func _use_item() -> void:
 	resource.use()
-	Player.remove_item(resource.get_internal_name())
+	PlayerManager.remove_item(resource.get_internal_name())
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2lxo0"]
