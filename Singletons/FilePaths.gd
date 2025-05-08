@@ -11,6 +11,7 @@ const LIST_ITEM_PATH := "res://Scenes/ListItem.tscn"
 const RESOURCE_FOLDER := "res://Resources/"
 const LESSON_SELECT_SCENE_PATH := "res://Scenes/LessonSelectScene.tscn"
 const ACTIVITY_SELECT_SCENE_PATH := "res://Scenes/ActivitySelectScene.tscn"
+const DATABASE_PATH := "res://database.db"
 
 #TODO: Remove when reading from DB
 const ACTIVITY_COOP_SOCCER := "res://Activities/CoopSoccer/scenes/GameScene.tscn"

@@ -8,20 +8,27 @@ script/source = "extends Node
 @onready var go_back_button = $CanvasLayer/GoBackButton
 @onready var vbox = $ScrollContainer/VBoxContainer
 
-var data = [\"l1\",\"l2\", \"l3\"]
+var lessons
 
 func _ready() -> void:
 	go_back_button.pressed.connect(NavigationManager.go_back)
 
-	for index in data.size():
+	lessons = DatabaseManager.select_all_from_table_where(
+		DatabaseManager.LESSON_TABLE,
+		\"\"
+		)
+
+	for index in lessons.size():
+		var lesson = lessons[index]
 		var button = Button.new()
-		button.text = data[index]
-		button.set_meta(\"index\", index)
-		button.pressed.connect(_on_button_pressed.bind(go_back_button))
+		button.text = lesson[\"name\"]
+		button.set_meta(\"lesson_id\", lesson[\"id\"])
+		button.pressed.connect(_on_button_pressed.bind(button))
+		button.get_method_list()
 		vbox.add_child(button)
 
 func _on_button_pressed(button: Button):
-	print(\"Pressed:\", button.get_meta(\"index\"))
+	print(\"Pressed:\", button.get_meta(\"lesson_id\"))
 "
 
 [node name="LessonSelectScene" type="Node"]
