@@ -642,6 +642,7 @@ size = Vector2(59.5, 105.5)
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_18ig4"]
 friction = 0.0
 bounce = 1.0
+absorbent = true
 
 [node name="GameScene" type="Control"]
 layout_mode = 3
@@ -705,6 +706,7 @@ shape = SubResource("RectangleShape2D_7s5hy")
 unique_name_in_owner = true
 z_index = 1
 position = Vector2(1, 0)
+wall_min_slide_angle = 0.0872665
 metadata/_edit_lock_ = true
 
 [node name="Player1" parent="World" instance=ExtResource("1_vh257")]

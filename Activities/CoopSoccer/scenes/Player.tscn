@@ -142,6 +142,7 @@ func get_effective_direction() -> Vector2:
 func update_particles():
 	if is_dashing:
 		# Update rotation based on current velocity
+		# TODO: don't, see Ball.gd
 		var current_dir = velocity.normalized()
 		dash_particles.rotation = current_dir.angle() + PI
 	elif dash_particles.emitting:

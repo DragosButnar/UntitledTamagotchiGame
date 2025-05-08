@@ -1,12 +1,13 @@
-[gd_resource type="Resource" script_class="Book" load_steps=2 format=3 uid="uid://bbhc28lcmqmuy"]
+[gd_resource type="Resource" script_class="Book" load_steps=3 format=3 uid="uid://bbhc28lcmqmuy"]
 
 [ext_resource type="Script" uid="uid://c162wr6iex2nb" path="res://Model/Book.gd" id="1_d4g8v"]
+[ext_resource type="Texture2D" uid="uid://bvgo5leuwniu5" path="res://Assets/dash_particle.png" id="2_klkgn"]
 
 [resource]
 resource_name = "intro_to_c"
 script = ExtResource("1_d4g8v")
-knowledge_gain = 5
 item_name = "Intro to C"
 mood_boost = -10
 loneliness_reduction = -10
 cost = 10
+texture = ExtResource("2_klkgn")

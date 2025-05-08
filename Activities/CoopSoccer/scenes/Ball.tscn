@@ -6,7 +6,7 @@
 script/source = "class_name Ball
 extends CharacterBody2D
 
-@export var max_speed := 1500.0
+@export var max_speed := 1000.0
 @export var acceleration := 800.0
 @export var friction := 0.97
 @export var bounce_factor := 0.8
@@ -26,7 +26,7 @@ func _physics_process(delta):
 	var velocity_normalized = velocity.normalized()
 	var angular_speed = velocity.length() / radius
 	var rotation_direction = velocity_normalized.x * velocity_normalized.y
-	rotation += angular_speed * delta * rotation_direction
+	get_node(\"Sprite2D\").rotation += angular_speed * delta * rotation_direction
 	
 	# Apply friction with delta consideration
 	velocity *= pow(friction, delta * 60)
@@ -38,7 +38,8 @@ func _physics_process(delta):
 	# Move and handle collisions
 	move_and_slide()
 	handle_collisions(delta)
-
+	rotation = 0
+	
 func handle_collisions(delta):
 	var touched_wall = false
 	
@@ -106,7 +107,8 @@ func reset_ball():
 	position = CoopSoccerManager.BALL_STARTING_POSITION  # Set this in your CoopSoccerManager
 
 func on_player_hit(direction: Vector2, strength: float):
-	apply_force(direction, strength)
+	#apply_force(direction, strength)
+	pass
 
 func _on_game_scene_game_paused() -> void:
 	set_physics_process(false)

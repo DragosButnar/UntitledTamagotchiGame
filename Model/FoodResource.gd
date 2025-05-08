@@ -1,10 +1,5 @@
 extends ResourceInterface
 class_name FoodResource
-"""
-FoodResource.gd
-
-Example resource subclass representing a food item.
-"""
 
 @export var food_name: String
 @export var hunger_reduction: int
