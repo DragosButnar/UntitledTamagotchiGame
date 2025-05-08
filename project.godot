@@ -47,7 +47,6 @@ folder_colors={
 "res://Activities/": "pink",
 "res://Assets/": "pink",
 "res://Common/": "gray",
-"res://Lessons/": "yellow",
 "res://Model/": "blue",
 "res://Resources/": "orange",
 "res://Scenes/": "green",

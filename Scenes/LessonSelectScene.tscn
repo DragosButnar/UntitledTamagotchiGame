@@ -28,7 +28,10 @@ func _ready() -> void:
 		vbox.add_child(button)
 
 func _on_button_pressed(button: Button):
-	print(\"Pressed:\", button.get_meta(\"lesson_id\"))
+	NavigationManager.show_screen(
+		FilePaths.LESSON_DISPLAY_SCENE, 
+		{\"lesson_id\": button.get_meta(\"lesson_id\")}
+	)
 "
 
 [node name="LessonSelectScene" type="Node"]
