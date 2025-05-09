@@ -24,7 +24,6 @@ func _ready() -> void:
 		button.text = lesson[\"name\"]
 		button.set_meta(\"lesson_id\", lesson[\"id\"])
 		button.pressed.connect(_on_button_pressed.bind(button))
-		button.get_method_list()
 		vbox.add_child(button)
 
 func _on_button_pressed(button: Button):

@@ -8,18 +8,23 @@ script/source = "extends Node
 @onready var go_back_button = $CanvasLayer/GoBackButton
 @onready var vbox = $ScrollContainer/VBoxContainer
 
-var activities := {\"Two player soccer\": FilePaths.ACTIVITY_COOP_SOCCER,\"A2\":\"\", \"A3\":\"\"}
+var activities
 
 func _ready() -> void:
 	go_back_button.pressed.connect(NavigationManager.go_back)
 
-	for activity in activities:
+	activities = DatabaseManager.select_all_from_table_where(
+		DatabaseManager.ACTIVITY_TABLE,
+		\"\"
+	)
+
+	for index in activities.size():
+		var activity = activities[index]
 		var button = Button.new()
-		button.text = activity
-		button.pressed.connect(_on_button_pressed.bind(activities[activity]))
+		button.text = activity[\"name\"]
+		button.pressed.connect(_on_button_pressed.bind(activity[\"path\"]))
 		vbox.add_child(button)
 		
-	#TODO: Read from DB
 
 func _on_button_pressed(file: String):
 	NavigationManager.show_screen(file)

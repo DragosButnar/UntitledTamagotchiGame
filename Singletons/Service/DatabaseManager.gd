@@ -3,6 +3,7 @@ extends Node
 
 const LESSON_TABLE := "lesson"
 const LESSON_SECTION_TABLE := "lesson_content"
+const ACTIVITY_TABLE := "activity"
 const SHOP_INVENTORY := "shop"
 
 var _database: SQLite

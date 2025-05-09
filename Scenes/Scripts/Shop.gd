@@ -9,15 +9,15 @@ var shop_items: Array[ResourceInterface] = []
 const SELL_COST_MODIFIER = 0.5
 
 func _ready():
-	##TODO: Load data from DB, remove example data
-	var apple: ResourceInterface = load("res://Resources/apple.tres")
-	var w_horse: ResourceInterface = load("res://Resources/wooden_horse.tres")
-	var c_book: ResourceInterface = load("res://Resources/intro_to_c.tres")
-	shop_items = [
-		apple,
-		w_horse,
-		c_book
-	]
+	var inventory := DatabaseManager.select_all_from_table_where(
+		DatabaseManager.SHOP_INVENTORY,
+		""
+	) as Array[Dictionary]
+	
+	for i in inventory.size():
+		var item_path = inventory[i]["path"]
+		var item = load(item_path) as ResourceInterface
+		shop_items.append(item)
 
 func load_shop_items() -> Array[ResourceInterface]:
 	return shop_items
