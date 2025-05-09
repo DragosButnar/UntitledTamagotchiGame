@@ -75,9 +75,6 @@ func update_display() -> void:
 		title_label.text = \"\"
 		content_text.text = \"\"
 	
-	# Update button visibility
-	prev_button.visible = current_page_index > 0
-	next_button.visible = current_page_index < pages.size() - 1
 
 func _on_prev_button_pressed() -> void:
 	if current_page_index > 0:
@@ -152,8 +149,9 @@ script = SubResource("GDScript_ef2ke")
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+offset_left = 64.0
 offset_top = 64.0
-offset_right = 1024.0
+offset_right = 1088.0
 offset_bottom = 128.0
 theme_override_font_sizes/font_size = 30
 vertical_alignment = 1
@@ -175,6 +173,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 size_flags_vertical = 3
+editable = false
 wrap_mode = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
@@ -195,8 +194,9 @@ text = "Next"
 
 [node name="GoBackButton" type="Button" parent="."]
 layout_mode = 0
+offset_left = 8.0
 offset_top = 8.0
-offset_right = 66.0
+offset_right = 74.0
 offset_bottom = 36.0
 shortcut = ExtResource("2_0oong")
 text = "Back..."
