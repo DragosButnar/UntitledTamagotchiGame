@@ -26,7 +26,13 @@ const MOOD_THRESHOLDS := {
 	"Depressed": 0
 }
 
-# Backing variables for property setters
+const WORD_THRESHOLDS := {
+	Stat.HUNGER: {"threshold": 50, "above": true},
+	Stat.THIRST: {"threshold": 50, "above": true},
+	Stat.LONELINESS: {"threshold": 50, "above": true},
+	Stat.ENERGY: {"threshold": 30, "above": false}
+}
+
 var _mood_value: int
 var _hunger: int
 var _thirst: int
@@ -34,7 +40,6 @@ var _loneliness: int
 var _energy: int
 var mood_name: String
 
-# Property setters with automatic clamping and logging
 @export var mood_value: int = 0:
 	get: return _mood_value
 	set(value):
@@ -78,20 +83,14 @@ var mood_name: String
 
 func update_stat(stat: Stat, value: int) -> void:
 	match stat:
-		Stat.MOOD_VALUE:
-			mood_value = value
-		Stat.HUNGER:
-			hunger = value
-		Stat.THIRST:
-			thirst = value
-		Stat.LONELINESS:
-			loneliness = value
-		Stat.ENERGY:
-			energy = value
+		Stat.MOOD_VALUE: mood_value = value
+		Stat.HUNGER: hunger = value
+		Stat.THIRST: thirst = value
+		Stat.LONELINESS: loneliness = value
+		Stat.ENERGY: energy = value
 
 func add_to_stat(stat: Stat, value: int) -> void:
-	var current = get_stat(stat)
-	update_stat(stat, current + value)
+	update_stat(stat, get_stat(stat) + value)
 
 func get_stat(stat: Stat) -> int:
 	match stat:
@@ -100,31 +99,25 @@ func get_stat(stat: Stat) -> int:
 		Stat.THIRST: return thirst
 		Stat.LONELINESS: return loneliness
 		Stat.ENERGY: return energy
-	return 0
-	
-	
-func get_stats() -> Dictionary[String, int]:
+		_: return 0
+
+func get_stats() -> Dictionary:
 	return {
 		"mood_value": mood_value,
-		"energy": energy,
 		"hunger": hunger,
 		"thirst": thirst,
-		"loneliness": loneliness
+		"loneliness": loneliness,
+		"energy": energy
 	}
 
 func set_stats(data: Dictionary) -> void:
 	for key in data:
 		if STAT_KEYS_TO_ENUM.has(key):
-			var stat: Stat = STAT_KEYS_TO_ENUM[key]
-			var value: int = data[key]
-			update_stat(stat, value)
+			update_stat(STAT_KEYS_TO_ENUM[key], data[key])
 		else:
-			push_error("Invalid stat key in data: %s" % key)
+			push_error("Invalid stat key: %s" % key)
 	update_mood_name()
-	
-func get_mood_name() -> String:
-	return mood_name
-	
+
 func update_mood_name() -> void:
 	for mood in MOOD_THRESHOLDS:
 		if mood_value >= MOOD_THRESHOLDS[mood]:
@@ -132,3 +125,37 @@ func update_mood_name() -> void:
 				mood_name = mood
 				print("Mood changed to: %s" % mood_name)
 			return
+
+func get_mood_name() -> String:
+	return mood_name
+
+func pick_word() -> String:
+	var candidates = []
+	
+	for stat in WORD_THRESHOLDS:
+		var config = WORD_THRESHOLDS[stat]
+		var current = get_stat(stat)
+		var passes = (current >= config.threshold) if config.above else (current <= config.threshold)
+		
+		if passes:
+			var weight = current if config.above else (STAT_LIMITS[stat].max - current)
+			var stat_key = STAT_KEYS_TO_ENUM.find_key(stat)
+			if stat_key:
+				candidates.append({"name": stat_key, "weight": weight})
+	
+	if candidates.is_empty():
+		return ""
+	
+	var total_weight = candidates.reduce(func(acc, c): return acc + c.weight, 0)
+	if total_weight <= 0:
+		return candidates.pick_random().name
+	
+	var random_value = randf() * total_weight
+	var accumulated = 0.0
+	
+	for candidate in candidates:
+		accumulated += candidate.weight
+		if accumulated >= random_value:
+			return candidate.name
+	
+	return ""
