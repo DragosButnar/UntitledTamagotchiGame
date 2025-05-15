@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ckwlnr6xoexch"]
+[gd_scene load_steps=11 format=3 uid="uid://ckwlnr6xoexch"]
 
 [ext_resource type="Texture2D" uid="uid://ohl6p5mcivb0" path="res://Assets/slime/ready/ready_1.png" id="1_6govx"]
 [ext_resource type="Texture2D" uid="uid://b4an77mmahrvk" path="res://Assets/slime/ready/ready_2.png" id="2_tr3wi"]
@@ -6,9 +6,12 @@
 [ext_resource type="Texture2D" uid="uid://cw426sdjweyqs" path="res://Assets/slime/ready/ready_4.png" id="4_ila8h"]
 [ext_resource type="Shortcut" uid="uid://c2biw5174i2sc" path="res://Shortcuts/EscapeKey.tres" id="5_8xu0e"]
 [ext_resource type="Shortcut" uid="uid://cqtokc0kyy2fh" path="res://Shortcuts/TideKey.tres" id="6_xer1j"]
+[ext_resource type="Texture2D" uid="uid://c2dds2mamba4k" path="res://Assets/dialogue_bubble.png" id="7_ldwsg"]
 
 [sub_resource type="GDScript" id="GDScript_247v1"]
 script/source = "extends Control
+
+const DIALOGUE_TIMER := 3
 
 @onready var lacreatura = $ClickableSprite
 
@@ -20,6 +23,10 @@ script/source = "extends Control
 
 @onready var infinite_money_button = %InfiniteMoneyButton
 
+@onready var dialogue_bubble := %DialogueBubble
+@onready var dialogue_label := %DialogueLabel
+@onready var dialogue_timer := %DialogueTimer
+
 func _ready():
 	shop_button.pressed.connect(_on_ShopButton_pressed)
 	exit_button.pressed.connect(_on_ExitButton_pressed)
@@ -30,10 +37,9 @@ func _ready():
 	infinite_money_button.pressed.connect(_on_infinite_money_pressed)
 	
 	lacreatura.play(\"default\")  # Auto-play animation
-	# Set collision shape to match frame size
-	##var frame_size = $ClickableSprite.sprite_frames.get_frame_texture(\"default\", 0).get_size()
-	##$ClickableSprite/Area2D/CollisionShape2D.shape.size = frame_size
-		
+	
+	dialogue_bubble.hide()
+	
 	# Connect area input
 	$ClickableSprite/Area2D.input_event.connect(_on_sprite_clicked)
 
@@ -43,7 +49,9 @@ func _process(delta: float) -> void:
 func _on_sprite_clicked(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			print(\"Sprite clicked!\")
+			dialogue_bubble.show()
+			dialogue_label.text = DialogueManager.get_current_dialogue_line()
+			dialogue_timer.start(DIALOGUE_TIMER)
 
 
 func _on_give_items_button_pressed():
@@ -73,6 +81,10 @@ func _on_ExitButton_pressed():
 	
 func _on_infinite_money_pressed():
 	GameManager.toggle_infinite_money()
+
+
+func _on_dialogue_timer_timeout() -> void:
+	dialogue_bubble.hide()
 "
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_xs0gr"]
@@ -178,3 +190,27 @@ offset_right = 22.0
 offset_bottom = 43.0
 grow_horizontal = 2
 shortcut = ExtResource("6_xer1j")
+
+[node name="DialogueBubble" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(865.6, 155.375)
+scale = Vector2(5.28333, 6.06111)
+texture = ExtResource("7_ldwsg")
+
+[node name="DialogueLabel" type="Label" parent="DialogueBubble"]
+unique_name_in_owner = true
+offset_left = -24.0
+offset_top = -14.0
+offset_right = 24.0
+offset_bottom = 6.0
+theme_override_font_sizes/font_size = 5
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+justification_flags = 162
+clip_text = true
+
+[node name="DialogueTimer" type="Timer" parent="DialogueBubble"]
+unique_name_in_owner = true
+
+[connection signal="timeout" from="DialogueBubble/DialogueTimer" to="." method="_on_dialogue_timer_timeout"]

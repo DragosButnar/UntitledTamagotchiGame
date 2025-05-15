@@ -13,10 +13,7 @@ var lessons
 func _ready() -> void:
 	go_back_button.pressed.connect(NavigationManager.go_back)
 
-	lessons = DatabaseManager.select_all_from_table_where(
-		DatabaseManager.LESSON_TABLE,
-		\"\"
-		)
+	lessons = DatabaseManager.get_all_lessons()
 
 	for index in lessons.size():
 		var lesson = lessons[index]

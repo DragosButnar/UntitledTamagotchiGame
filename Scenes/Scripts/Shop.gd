@@ -9,10 +9,7 @@ var shop_items: Array[ResourceInterface] = []
 const SELL_COST_MODIFIER = 0.5
 
 func _ready():
-	var inventory := DatabaseManager.select_all_from_table_where(
-		DatabaseManager.SHOP_INVENTORY,
-		""
-	) as Array[Dictionary]
+	var inventory := DatabaseManager.get_shop_inventory()
 	
 	for i in inventory.size():
 		var item_path = inventory[i]["path"]

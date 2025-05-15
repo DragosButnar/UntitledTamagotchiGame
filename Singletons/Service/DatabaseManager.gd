@@ -5,6 +5,8 @@ const LESSON_TABLE := "lesson"
 const LESSON_SECTION_TABLE := "lesson_content"
 const ACTIVITY_TABLE := "activity"
 const SHOP_INVENTORY := "shop"
+const DIALOGUE_TABLE := "dialogue"
+const LESSON_SECTION_QUERY := "SELECT * FROM %s WHERE lesson_id = ? ORDER BY 'order'"
 
 var _database: SQLite
 
@@ -14,21 +16,23 @@ func _ready() -> void:
 	_database.set_foreign_keys(true)
 	_database.open_db()
 
-func select_all_from_table_where(table_name: String, condition: String, params: Array = [], order_by: String = "") -> Array:
-	var query_string = "SELECT * FROM %s" % table_name
-	if condition != "":
-		query_string += ' WHERE %s' % condition
+
+func get_shop_inventory() -> Array[Dictionary]:
+	return _database.select_rows(SHOP_INVENTORY, "", ["*"])
 	
-	# Add ORDER BY clause if specified (properly escape column name)
-	if order_by != "":
-		query_string += ' ORDER BY "%s"' % order_by
+func get_dialogue_line(tag: String) -> Array[Dictionary]:
+	return _database.select_rows(DIALOGUE_TABLE, "tag = '%s'" % tag, ["line"]) 
+
+func get_all_activities() -> Array[Dictionary]:
+	return _database.select_rows(ACTIVITY_TABLE, "", ["*"])
+
+func get_all_lessons() -> Array[Dictionary]:
+	return _database.select_rows(LESSON_TABLE, "", ["*"])
+
+func get_lesson_sections(lesson_id: int) -> Array[Dictionary]:
+	_database.query_with_bindings(LESSON_SECTION_QUERY % LESSON_SECTION_TABLE, [lesson_id])
+	return _database.query_result
 	
-	# Execute safe parameterized query
-	if _database.query_with_bindings(query_string, params):
-		return _database.get_query_result()
-	else:
-		push_error("Database query failed: %s" % query_string)
-		return []
 
 func _exit_tree() -> void:
 	_database.close_db()

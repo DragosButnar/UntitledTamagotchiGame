@@ -44,12 +44,7 @@ func setup() -> void:
 		return
 	
 	var lesson_id := previous_scene_data[\"lesson_id\"] as int
-	var db_results = DatabaseManager.select_all_from_table_where(
-		DatabaseManager.LESSON_SECTION_TABLE,
-		\"lesson_id = ?\",  # Parameterized query
-		[lesson_id],      # Bound parameters
-		\"order\"           # Order column
-	)
+	var db_results = DatabaseManager.get_lesson_sections(lesson_id)
 	
 	
 	# Format results with proper escaping

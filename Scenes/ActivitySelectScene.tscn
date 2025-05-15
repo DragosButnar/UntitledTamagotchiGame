@@ -13,10 +13,7 @@ var activities
 func _ready() -> void:
 	go_back_button.pressed.connect(NavigationManager.go_back)
 
-	activities = DatabaseManager.select_all_from_table_where(
-		DatabaseManager.ACTIVITY_TABLE,
-		\"\"
-	)
+	activities = DatabaseManager.get_all_activities()
 
 	for index in activities.size():
 		var activity = activities[index]
