@@ -4,9 +4,9 @@ extends Node
 static func save_all() -> void:
 	var save_data := {
 		"PlayerManager": _get_player_data(),
-		"stats": _get_lacreatura_data()
+		"stats": _get_lacreatura_data(),
+		"last_logout": TimeManager.get_current_time()
 	}
-	
 	var file = FileAccess.open(FilePaths.SAVE_PATH, FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify(save_data, "\t"))  # Pretty-print with tabs
@@ -26,6 +26,7 @@ static func load_all() -> void:
 			var save_data = json.data
 			_load_player_data(save_data.get("PlayerManager", {}))
 			_load_lacreatura_data(save_data.get("stats", {}))
+			_load_last_logout(save_data.get("last_logout", TimeManager.get_current_time()))
 		else:
 			print("JSON Parse Error: ", json.get_error_message())
 		file.close()
@@ -41,7 +42,8 @@ static func _get_player_data() -> Dictionary:
 static func _get_lacreatura_data() -> Dictionary:
 	var stats = StatsManager.get_stats()
 	return stats
-	
+
+
 
 # PlayerManager data loading
 static func _load_player_data(data: Dictionary) -> void:
@@ -53,3 +55,7 @@ static func _load_player_data(data: Dictionary) -> void:
 # Creature data loading
 static func _load_lacreatura_data(data: Dictionary) -> void:
 	StatsManager.set_stats(data)
+	
+
+static func _load_last_logout(data: float):
+	TimeManager.set_last_logout_time(data)

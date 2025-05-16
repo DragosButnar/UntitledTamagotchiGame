@@ -26,6 +26,7 @@ FilePaths="*res://Singletons/FilePaths.gd"
 SaveManager="*res://Singletons/Service/SaveManager.gd"
 CoopSoccerManager="*res://Activities/CoopSoccer/scripts/coop_soccer_manager.gd"
 DialogueManager="*res://Singletons/Service/DialogueManager.gd"
+TimeManager="*res://Singletons/Service/TimeManager.gd"
 
 [display]
 

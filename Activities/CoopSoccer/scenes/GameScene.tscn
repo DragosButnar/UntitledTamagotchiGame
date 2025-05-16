@@ -112,6 +112,7 @@ func _start_exit_countdown(player: int):
 	exit_timer.start(CoopSoccerManager.EXIT_DELAY)
 
 func _on_exit_timer_end():
+	TimeManager.try_grant_activity_reward(\"soccer\")
 	NavigationManager.go_back()
 "
 
