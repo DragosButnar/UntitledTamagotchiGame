@@ -1,0 +1,73 @@
+[gd_scene load_steps=5 format=3 uid="uid://ciwecgssxh5ry"]
+
+[ext_resource type="Theme" uid="uid://b0y0a3w6ab13e" path="res://Assets/ui_font.tres" id="1_lp5fe"]
+
+[sub_resource type="GDScript" id="GDScript_cuw72"]
+script/source = "# PauseMenu.gd
+extends CanvasLayer
+
+@onready var resume_button: Button = %ResumeButton
+@onready var quit_button: Button = %QuitButton
+
+func _ready():
+	# Set process mode to always handle input
+	process_mode = PROCESS_MODE_ALWAYS
+	visible = false
+	
+	# Verify button connections
+	resume_button.pressed.connect(unpause)
+	quit_button.pressed.connect(quit_to_menu)
+
+func unpause():
+	print(\"Resume button pressed\")  # Debug
+	get_tree().paused = false
+	visible = false
+
+func quit_to_menu():
+	print(\"Quit button pressed\")  # Debug
+	get_tree().paused = false
+	NavigationManager.go_back()
+"
+
+[sub_resource type="InputEventKey" id="InputEventKey_cuw72"]
+device = -1
+keycode = 4194305
+
+[sub_resource type="Shortcut" id="Shortcut_jvnd5"]
+events = [SubResource("InputEventKey_cuw72")]
+
+[node name="PauseMenu" type="CanvasLayer"]
+script = SubResource("GDScript_cuw72")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -53.0
+offset_top = -46.5
+offset_right = 53.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_lp5fe")
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Game Paused"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_lp5fe")
+shortcut = SubResource("Shortcut_jvnd5")
+text = "Resume"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_lp5fe")
+text = "Quit"
