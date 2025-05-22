@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=4 uid="uid://cc8n4gb7kl4ux"]
+[gd_scene load_steps=8 format=4 uid="uid://cc8n4gb7kl4ux"]
 
 [ext_resource type="Texture2D" uid="uid://ndwmyjucbg3a" path="res://Assets/Solaria Demo Tiles.png" id="1_3lu3m"]
 [ext_resource type="SpriteFrames" uid="uid://b7hkwiodi366i" path="res://Assets/Animations/DefaultAnim.tres" id="2_54v8l"]
 [ext_resource type="PackedScene" uid="uid://ciwecgssxh5ry" path="res://Activities/PanicAttackSim/Scenes/PauseMenu.tscn" id="3_hc4sx"]
+[ext_resource type="PackedScene" uid="uid://hxtwskieyekp" path="res://Activities/PanicAttackSim/Scenes/BoxBreathContainer.tscn" id="4_r735j"]
 
 [sub_resource type="GDScript" id="GDScript_54v8l"]
 script/source = "extends CenterContainer
@@ -585,3 +586,8 @@ frame_progress = 0.737667
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_hc4sx")]
 unique_name_in_owner = true
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 2
+
+[node name="BoxBreathContainer" parent="CenterContainer" instance=ExtResource("4_r735j")]
