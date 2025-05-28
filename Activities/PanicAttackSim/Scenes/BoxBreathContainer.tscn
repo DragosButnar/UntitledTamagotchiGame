@@ -8,10 +8,24 @@
 [sub_resource type="GDScript" id="GDScript_bih1m"]
 script/source = "extends Node
 
-@onready var progress = %ProgressBar
-@onready var instruction_label = %InstructionLabel
-@onready var time_label = %TimeLabel
-@onready var indicator = %AnimatedSprite2D
+@onready var progress := %ProgressBar
+@onready var instruction_label := %InstructionLabel
+@onready var time_label := %TimeLabel
+@onready var indicator := %AnimatedSprite2D
+
+
+@export var MAX_CYCLES := 2
+
+var current_cycles := 0
+
+func _ready() -> void:
+	current_cycles = 0
+	set_process_input(true)
+	reset_progress()
+	update_step(progress.value)
+	update_instruction()
+	update_time()
+	update_indicator()
 
 var _current_step:
 	get(): return _current_step
@@ -47,8 +61,11 @@ func update_step(value):
 		3:
 			_current_step = \"Pause\"
 		4:
+			current_cycles += 1
+			if current_cycles == MAX_CYCLES:
+				var earning_text := GameManager.try_grant_activity_reward()
+				GameManager.leave_scene.emit(earning_text)
 			reset_progress()
-	print(_current_step)
 
 func update_instruction():
 	instruction_label.text = _current_step
@@ -56,14 +73,6 @@ func update_instruction():
 func update_time():
 	time_label.text = str(5 - int(progress.value) % 200 / 40 as int)
 
-func _ready() -> void:
-	set_process_input(true)
-	reset_progress()
-	update_step(progress.value)
-	update_instruction()
-	update_time()
-	update_indicator()
-	
 func _process(delta: float) -> void:
 	if !Input.is_anything_pressed() and _current_step == \"Pause\":
 		if Engine.get_frames_drawn() % 2 == 0:

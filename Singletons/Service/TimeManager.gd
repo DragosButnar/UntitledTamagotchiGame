@@ -12,11 +12,6 @@ const STAT_DECAY_RATES := {
 const PASSIVE_LONELINESS_DECAY := 1
 const IN_GAME_MINUTE_DURATION := 60.0  # Real-world seconds
 
-# Money earning parameters
-const MONEY_CHANCE := 0.3  # 30% chance per activity
-const MONEY_MIN := 1
-const MONEY_MAX := 10
-
 var last_logout_time: float
 var _loneliness_timer: float = 0.0
 
@@ -49,14 +44,6 @@ func handle_login(saved_time: int) -> void:
 
 func get_logout_time() -> int:
 	return Time.get_unix_time_from_system()
-
-func try_grant_activity_reward(activity_type: String) -> void:
-	if randf() <= MONEY_CHANCE:
-		var amount = randi_range(MONEY_MIN, MONEY_MAX)
-		PlayerManager.add_currency(amount)
-		print("Earned %d coins from %s!" % [amount, activity_type])
-	else:
-		print("No money earned from %s..." % activity_type)
 
 
 func load_data(data: Dictionary) -> void:

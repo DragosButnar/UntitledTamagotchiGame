@@ -11,6 +11,6 @@ signal game_paused
 signal game_resumed
 signal scores_updated
 signal player_scored(player)
-signal game_win(player)
+signal game_win(player, earn_message)
 signal wall_touched
 signal wall_left

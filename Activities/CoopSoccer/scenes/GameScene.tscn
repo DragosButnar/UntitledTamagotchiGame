@@ -87,14 +87,15 @@ func reset_ball():
 	ball.set_current_velocity(Vector2.ZERO)
 	ball.position = CoopSoccerManager.BALL_STARTING_POSITION
 
-func player_win(player: int) -> void:
-	win_label.text = \"Player \" + str(player) + \" wins!\"
+func player_win(player: int, earning_message: String) -> void:
+	win_label.text = \"Player \" + str(player) + \" wins!\\n\" + earning_message
 
 func player_goal_hit(player:int) -> void:
 	print(\"Player \", player, \" scored!\")
 	change_score(player, 1)
 	if current_scores[player] >= CoopSoccerManager.WIN_SCORE:
-		CoopSoccerManager.game_win.emit(player)
+		var earning_message := GameManager.try_grant_activity_reward()
+		CoopSoccerManager.game_win.emit(player, earning_message)
 	else:
 			reset_ball()
 			reset_player_positions()
@@ -108,11 +109,11 @@ func change_score(player: int, value: int) -> void:
 	CoopSoccerManager.scores_updated.emit()
 	
 
-func _start_exit_countdown(player: int):
+func _start_exit_countdown(player: int, earning_message: String):
 	exit_timer.start(CoopSoccerManager.EXIT_DELAY)
+	print(earning_message)
 
 func _on_exit_timer_end():
-	TimeManager.try_grant_activity_reward(\"soccer\")
 	NavigationManager.go_back()
 "
 
