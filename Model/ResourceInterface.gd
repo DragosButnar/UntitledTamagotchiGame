@@ -9,7 +9,7 @@ with placeholder methods. Subclasses must override these methods.
 """
 
 @export var cost: int
-@export var texture: Texture2D = preload("res://Assets/dash_particle.png")
+@export var texture: Texture2D = preload("res://Assets/placeholder16x16.png")
 
 func get_internal_name() -> String:
 	# Return the internal name of this resource

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Book" load_steps=3 format=3 uid="uid://bbhc28lcmqmuy"]
 
 [ext_resource type="Script" uid="uid://c162wr6iex2nb" path="res://Model/Book.gd" id="1_d4g8v"]
-[ext_resource type="Texture2D" uid="uid://bvgo5leuwniu5" path="res://Assets/dash_particle.png" id="2_klkgn"]
+[ext_resource type="Texture2D" uid="uid://bhw80gcwrl7q2" path="res://Assets/placeholder16x16.png" id="2_klkgn"]
 
 [resource]
 resource_name = "intro_to_c"
