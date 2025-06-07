@@ -2,10 +2,7 @@ extends Node
 
 signal leave_scene(earning_text)
 
-# Money earning parameters
-const MONEY_CHANCE := 1
-const MONEY_MIN := 1
-const MONEY_MAX := 10
+
 
 var player_can_lose_money: bool = true
 
@@ -43,11 +40,3 @@ func is_infinite_money_toggled() -> bool:
 func toggle_infinite_money() -> void:
 	player_can_lose_money = !player_can_lose_money
 	print("Infinite money: " + str(is_infinite_money_toggled()))
-	
-func try_grant_activity_reward() -> String:
-	if randf() <= MONEY_CHANCE:
-		var amount = randi_range(MONEY_MIN, MONEY_MAX)
-		PlayerManager.add_currency(amount)
-		return "Earned %d coins!" % amount
-	else:
-		return "No money earned..."

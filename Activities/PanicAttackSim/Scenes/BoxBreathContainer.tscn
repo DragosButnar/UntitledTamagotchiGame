@@ -63,7 +63,7 @@ func update_step(value):
 		4:
 			current_cycles += 1
 			if current_cycles == MAX_CYCLES:
-				var earning_text := Utilities.try_grant_activity_reward()
+				var earning_text := RewardManager.try_grant_activity_reward()
 				Utilities.leave_scene.emit(earning_text)
 			reset_progress()
 
