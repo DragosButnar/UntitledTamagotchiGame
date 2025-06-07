@@ -1,43 +1,67 @@
-[gd_scene load_steps=3 format=3 uid="uid://nxd584teta5w"]
+[gd_scene load_steps=2 format=3 uid="uid://nxd584teta5w"]
 
 [sub_resource type="GDScript" id="GDScript_flr55"]
-script/source = "class_name ListItem
+script/source = "extends Container
 
-extends TextureRect
-
-@onready var colider = $Area2D/CollisionShape2D
+@onready var amount_label := %Label
+@onready var button := %TextureButton
 
 var resource: ResourceInterface
 
 func setup(res: ResourceInterface) -> void:
 	resource = res
-	set_texture(resource.get_texture())
-
-func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.is_pressed():
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			print(\"Item: \" + resource.get_display_name() + \" clicked\")
-			_use_item()
-			var result = PlayerManager.check_inventory_for_resource(resource.get_internal_name())
-			if result == 0:
-				queue_free()
 
 func _use_item() -> void:
 	resource.use()
 	PlayerManager.remove_item(resource.get_internal_name())
+
+func _ready() -> void:
+	var image := resource.get_texture()
+	
+	button.texture_normal = resource.get_texture()
+	var result = PlayerManager.check_inventory_for_resource(resource.get_internal_name())
+	amount_label.text = str(result)
+	button.pressed.connect(_on_texture_button_pressed)
+
+func _on_texture_button_pressed() -> void:
+	print(\"Item: \" + resource.get_display_name() + \" clicked\")
+	_use_item()
+	var result = PlayerManager.check_inventory_for_resource(resource.get_internal_name())
+	if result == 0:
+		queue_free()
+	else:
+		amount_label.text = str(result)
 "
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_2lxo0"]
-size = Vector2(1160, 657)
-
-[node name="TextureRect" type="TextureRect"]
-offset_right = 1154.0
-offset_bottom = 653.0
-expand_mode = 3
+[node name="TextureRect" type="PanelContainer"]
+custom_minimum_size = Vector2(16, 16)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 16.83
 script = SubResource("GDScript_flr55")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Label" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 10
+text = "xN"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(570, 318.5)
-shape = SubResource("RectangleShape2D_2lxo0")
+[node name="CenterContainer" type="CenterContainer" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="CenterContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+ignore_texture_size = true
+stretch_mode = 3

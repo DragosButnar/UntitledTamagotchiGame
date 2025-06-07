@@ -48,3 +48,6 @@ func get_texture() -> Texture2D:
 
 func get_cost() -> int:
 	return cost
+
+func send_use_signal():
+	Utilities.resource_used.emit(get_internal_name())

@@ -15,6 +15,7 @@ func get_display_name() -> String:
 	return item_name
 
 func use() -> void:
+	send_use_signal()
 	StatsManager.add_to_stat(StatsManager.Stat.MOOD_VALUE, mood_boost)
 	StatsManager.add_to_stat(StatsManager.Stat.LONELINESS, -loneliness_reduction)
 

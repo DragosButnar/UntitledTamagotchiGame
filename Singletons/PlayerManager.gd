@@ -56,7 +56,7 @@ static func use_item(resource_name: String):
 		
 static func check_inventory_for_resource(resource_name: String = "") -> int:
 		var val = inventory.get(resource_name)
-		return val != null if val else 0
+		return val if val != null else 0
 	
 static func check_inventory() -> Dictionary[String, int]:
 	return inventory

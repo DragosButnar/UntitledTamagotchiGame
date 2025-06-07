@@ -9,6 +9,7 @@
 script/source = "extends Control
 
 const DIALOGUE_TIMER := 3
+const ListItem = preload(FilePaths.LIST_ITEM_PATH)
 
 @onready var lacreatura = $ClickableSprite
 
@@ -24,10 +25,13 @@ const DIALOGUE_TIMER := 3
 @onready var dialogue_label := %DialogueLabel
 @onready var dialogue_timer := %DialogueTimer
 
+@onready var item_container := %ItemContainer
+
 func _ready():
+	Utilities.resource_used.connect(show_dialogue)
+	
 	shop_button.pressed.connect(_on_ShopButton_pressed)
 	exit_button.pressed.connect(_on_ExitButton_pressed)
-	give_items_button.pressed.connect(_on_give_items_button_pressed)
 	lesson_button.pressed.connect(_on_lesson_button_pressed)
 	activity_button.pressed.connect(_on_activity_button_pressed)
 	
@@ -39,6 +43,21 @@ func _ready():
 	
 	# Connect area input
 	$ClickableSprite/Area2D.input_event.connect(_on_sprite_clicked)
+	
+	var items = PlayerManager.check_inventory()
+	
+	# Initialize item list
+	for resource_name in items.keys():
+		var resource = Utilities.get_resource_by_name(resource_name)
+		if not resource:
+			push_error(\"Missing resource: %s\" % resource_name)
+			continue
+		
+		var list_item = ListItem.instantiate()
+		list_item.setup(resource)
+		item_container.add_child(list_item)
+	
+	item_container.hide()
 
 func _process(delta: float) -> void:
 	infinite_money_button.set_pressed(Utilities.is_infinite_money_toggled())
@@ -46,13 +65,7 @@ func _process(delta: float) -> void:
 func _on_sprite_clicked(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			dialogue_bubble.show()
-			dialogue_label.text = DialogueManager.get_current_dialogue_line()
-			dialogue_timer.start(DIALOGUE_TIMER)
-
-
-func _on_give_items_button_pressed():
-	NavigationManager.show_screen(FilePaths.GIVE_ITEM_SCENE_PATH)
+			show_dialogue()
 
 
 func _on_lesson_button_pressed():
@@ -82,6 +95,15 @@ func _on_infinite_money_pressed():
 
 func _on_dialogue_timer_timeout() -> void:
 	dialogue_bubble.hide()
+
+
+func _on_item_button_toggled(toggled_on: bool) -> void:
+	item_container.visible = toggled_on
+	
+func show_dialogue(tag:String=\"\"):
+	dialogue_bubble.show()
+	dialogue_label.text = DialogueManager.get_current_dialogue_line()
+	dialogue_timer.start(DIALOGUE_TIMER)
 "
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tee3r"]
@@ -131,6 +153,7 @@ text = "Shop"
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
+toggle_mode = true
 text = "Give items"
 
 [node name="LessonButton" type="Button" parent="CanvasLayer/HBoxContainer"]
@@ -154,6 +177,32 @@ offset_bottom = 45.0
 theme_override_font_sizes/font_size = 24
 shortcut = ExtResource("5_8xu0e")
 text = "Exit"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer"]
+custom_minimum_size = Vector2(40, 40)
+anchors_preset = -1
+anchor_left = 0.257
+anchor_top = 0.852
+anchor_right = 0.771
+anchor_bottom = 0.914
+offset_left = 2.936
+offset_top = -0.0960083
+offset_right = -0.192017
+offset_bottom = -0.272034
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+follow_focus = true
+vertical_scroll_mode = 0
+
+[node name="ItemContainer" type="HBoxContainer" parent="CanvasLayer/ScrollContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+alignment = 1
 
 [node name="CheatLayer" type="CanvasLayer" parent="."]
 
@@ -190,4 +239,5 @@ clip_text = true
 [node name="DialogueTimer" type="Timer" parent="DialogueBubble"]
 unique_name_in_owner = true
 
+[connection signal="toggled" from="CanvasLayer/HBoxContainer/ItemButton" to="." method="_on_item_button_toggled"]
 [connection signal="timeout" from="DialogueBubble/DialogueTimer" to="." method="_on_dialogue_timer_timeout"]

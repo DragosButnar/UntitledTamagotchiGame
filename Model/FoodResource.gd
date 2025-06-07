@@ -9,6 +9,7 @@ func get_display_name() -> String:
 	return food_name
 
 func use() -> void:
+	send_use_signal()
 	StatsManager.add_to_stat(StatsManager.Stat.HUNGER, -hunger_reduction)
 	StatsManager.add_to_stat(StatsManager.Stat.MOOD_VALUE, mood_boost)
 

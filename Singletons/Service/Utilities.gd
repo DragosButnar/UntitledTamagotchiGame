@@ -1,7 +1,7 @@
 extends Node
 
 signal leave_scene(earning_text)
-
+signal resource_used(resource_name)
 
 
 var player_can_lose_money: bool = true
