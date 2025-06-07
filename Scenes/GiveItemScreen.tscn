@@ -31,7 +31,7 @@ func _ready():
 	
 	# Initialize item list
 	for resource_name in items.keys():
-		var resource = GameManager.get_resource_by_name(resource_name)
+		var resource = Utilities.get_resource_by_name(resource_name)
 		if not resource:
 			push_error(\"Missing resource: %s\" % resource_name)
 			continue

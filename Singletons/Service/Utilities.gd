@@ -3,7 +3,7 @@ extends Node
 signal leave_scene(earning_text)
 
 # Money earning parameters
-const MONEY_CHANCE := 0.3  # 30% chance per activity
+const MONEY_CHANCE := 1
 const MONEY_MIN := 1
 const MONEY_MAX := 10
 

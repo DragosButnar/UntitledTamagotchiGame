@@ -41,7 +41,7 @@ func _ready():
 	$ClickableSprite/Area2D.input_event.connect(_on_sprite_clicked)
 
 func _process(delta: float) -> void:
-	infinite_money_button.set_pressed(GameManager.is_infinite_money_toggled())
+	infinite_money_button.set_pressed(Utilities.is_infinite_money_toggled())
 
 func _on_sprite_clicked(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.pressed:
@@ -77,7 +77,7 @@ func _on_ExitButton_pressed():
 	NavigationManager.exit()
 	
 func _on_infinite_money_pressed():
-	GameManager.toggle_infinite_money()
+	Utilities.toggle_infinite_money()
 
 
 func _on_dialogue_timer_timeout() -> void:

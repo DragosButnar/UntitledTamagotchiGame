@@ -28,7 +28,7 @@ func _ready() -> void:
 	earning_label.hide()
 	pause_menu.visible = false
 	player.play(\"default\")
-	GameManager.leave_scene.connect(_on_leaving_scene)
+	Utilities.leave_scene.connect(_on_leaving_scene)
 	exit_timer.timeout.connect(_leave_scene)
 
 func toggle_pause():

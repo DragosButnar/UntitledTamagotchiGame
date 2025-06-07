@@ -16,7 +16,7 @@ config/features=PackedStringArray("4.4", "Mobile")
 
 [autoload]
 
-GameManager="*res://Singletons/Service/GameManager.gd"
+Utilities="*res://Singletons/Service/Utilities.gd"
 ConfigurationManager="*res://Singletons/Service/ConfigurationManager.gd"
 NavigationManager="*res://Singletons/Service/NavigationManager.gd"
 DatabaseManager="*res://Singletons/Service/DatabaseManager.gd"

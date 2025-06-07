@@ -16,7 +16,7 @@ static func add_currency(amount: int):
 
 # Subtract currency if possible. Returns true on success, false if not enough.
 static func remove_currency(amount: int) -> bool:
-	if GameManager.is_infinite_money_toggled():
+	if Utilities.is_infinite_money_toggled():
 		return true
 	if currency >= amount:
 		currency -= amount
