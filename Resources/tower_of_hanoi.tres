@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Toy" load_steps=3 format=3 uid="uid://dsfi1qa65v4w5"]
+
+[ext_resource type="Script" uid="uid://crkvnux80mw5n" path="res://Model/Toy.gd" id="1_hxo7s"]
+[ext_resource type="Texture2D" uid="uid://dmo78mlp43cxs" path="res://Assets/tower.png" id="2_hxo7s"]
+
+[resource]
+script = ExtResource("1_hxo7s")
+item_name = "Tower"
+mood_boost = 12
+loneliness_reduction = -4
+cost = 10
+texture = ExtResource("2_hxo7s")
+metadata/_custom_type_script = "uid://crkvnux80mw5n"

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FoodResource" load_steps=4 format=3 uid="uid://yfhwr0lyn0w3"]
+
+[ext_resource type="Script" uid="uid://tck0vgw301co" path="res://Model/FoodResource.gd" id="1_yahwu"]
+[ext_resource type="Texture2D" uid="uid://dj0xx6msvvwjw" path="res://Assets/Food chart 1 refined.png" id="2_yahwu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xnhnx"]
+atlas = ExtResource("2_yahwu")
+region = Rect2(0, 48, 16, 16)
+
+[resource]
+script = ExtResource("1_yahwu")
+food_name = "Kiwi"
+hunger_reduction = 2
+mood_boost = 8
+cost = 8
+texture = SubResource("AtlasTexture_xnhnx")
+metadata/_custom_type_script = "uid://tck0vgw301co"

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Book" load_steps=3 format=3 uid="uid://cdxov3toa13jb"]
+
+[ext_resource type="Script" uid="uid://c162wr6iex2nb" path="res://Model/Book.gd" id="1_lg7yr"]
+[ext_resource type="Texture2D" uid="uid://c1ogap8ibby6f" path="res://Assets/Book/book3.png" id="2_lg7yr"]
+
+[resource]
+script = ExtResource("1_lg7yr")
+item_name = "How a game lives"
+mood_boost = 5
+loneliness_reduction = 3
+cost = 8
+texture = ExtResource("2_lg7yr")
+metadata/_custom_type_script = "uid://c162wr6iex2nb"

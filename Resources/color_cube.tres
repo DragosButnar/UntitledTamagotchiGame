@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Toy" load_steps=3 format=3 uid="uid://bnr6mk1wxi5p7"]
+
+[ext_resource type="Script" uid="uid://crkvnux80mw5n" path="res://Model/Toy.gd" id="1_ll6i5"]
+[ext_resource type="Texture2D" uid="uid://blpo7enjnwxo2" path="res://Assets/cube.png" id="2_ll6i5"]
+
+[resource]
+script = ExtResource("1_ll6i5")
+item_name = "Cube"
+mood_boost = 5
+loneliness_reduction = -1
+cost = 3
+texture = ExtResource("2_ll6i5")
+metadata/_custom_type_script = "uid://crkvnux80mw5n"

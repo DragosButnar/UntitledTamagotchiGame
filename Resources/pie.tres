@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FoodResource" load_steps=4 format=3 uid="uid://ddw0doeaxf0jm"]
+
+[ext_resource type="Script" uid="uid://tck0vgw301co" path="res://Model/FoodResource.gd" id="1_1vflu"]
+[ext_resource type="Texture2D" uid="uid://dj0xx6msvvwjw" path="res://Assets/Food chart 1 refined.png" id="2_1vflu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_01x6l"]
+atlas = ExtResource("2_1vflu")
+region = Rect2(0, 64, 16, 16)
+
+[resource]
+script = ExtResource("1_1vflu")
+food_name = "Pie"
+hunger_reduction = 9
+mood_boost = 15
+cost = 21
+texture = SubResource("AtlasTexture_01x6l")
+metadata/_custom_type_script = "uid://tck0vgw301co"

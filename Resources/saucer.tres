@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Toy" load_steps=3 format=3 uid="uid://dw7islyhria3k"]
+
+[ext_resource type="Script" uid="uid://crkvnux80mw5n" path="res://Model/Toy.gd" id="1_plxae"]
+[ext_resource type="Texture2D" uid="uid://by1lt5w47mn76" path="res://Assets/saucer.png" id="2_plxae"]
+
+[resource]
+script = ExtResource("1_plxae")
+item_name = "Saucer"
+mood_boost = 10
+loneliness_reduction = 3
+cost = 20
+texture = ExtResource("2_plxae")
+metadata/_custom_type_script = "uid://crkvnux80mw5n"
