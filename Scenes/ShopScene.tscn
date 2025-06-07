@@ -70,7 +70,9 @@ func _ready():
 			
 			for boost_type in boosts:
 				var boost_label = Label.new()
-				boost_label.text = \"%s: +%s\" % [boost_type, boosts[boost_type]]
+				boost_label.text = \"%s: \" % boost_type
+				boost_label.text += \"+\" if boosts[boost_type] > 0 else \"\"
+				boost_label.text += str(boosts[boost_type])
 				boost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 				boost_label.add_theme_color_override(\"font_color\", Color(0.5, 1.0, 0.5))
 				boost_container.add_child(boost_label)
