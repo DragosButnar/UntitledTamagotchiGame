@@ -50,7 +50,6 @@ static func remove_item(resource_name: String, amount: int = 1) -> bool:
 static func use_item(resource_name: String):
 	if remove_item(resource_name, 1):
 		print("Used one", resource_name)
-		##TODO: use_item_effect
 	else:
 		print("Failed to use item:", resource_name)
 		
