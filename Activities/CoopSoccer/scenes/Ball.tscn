@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bip5ohmubkmc1"]
 
-[ext_resource type="Texture2D" uid="uid://faeu6hd86p3v" path="res://Assets/ball_soccer2.png" id="1_nsjos"]
+[ext_resource type="Texture2D" uid="uid://du7274w1shaot" path="res://Assets/ball_soccer2.png" id="1_nsjos"]
 
 [sub_resource type="GDScript" id="GDScript_ja1hk"]
 script/source = "class_name Ball
@@ -125,6 +125,7 @@ safe_margin = 1.0
 script = SubResource("GDScript_ja1hk")
 
 [node name="Sprite2D" type="Sprite2D" parent="." groups=["ball"]]
+scale = Vector2(2, 2)
 texture = ExtResource("1_nsjos")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["ball"]]

@@ -4,10 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://b4an77mmahrvk" path="res://Assets/slime/ready/ready_2.png" id="2_o4126"]
 [ext_resource type="Texture2D" uid="uid://covplq5jyeuwt" path="res://Assets/slime/ready/ready_3.png" id="3_lkdrv"]
 [ext_resource type="Texture2D" uid="uid://cw426sdjweyqs" path="res://Assets/slime/ready/ready_4.png" id="4_p7iby"]
-[ext_resource type="Texture2D" uid="uid://dc55hor7ix15" path="res://Assets/stamina_circle.png" id="5_qu4a1"]
-[ext_resource type="Texture2D" uid="uid://hql524qstrtx" path="res://Assets/dash_indicator.png" id="6_70d11"]
+[ext_resource type="Texture2D" uid="uid://tg7nttxdi05b" path="res://Assets/stamina_bar.png" id="5_8sfsd"]
 [ext_resource type="Material" uid="uid://uu12j3dxtuh6" path="res://Assets/dash_glare.tres" id="6_cw2d6"]
-[ext_resource type="Texture2D" uid="uid://bvgo5leuwniu5" path="res://Assets/dash_particle.png" id="8_khinc"]
+[ext_resource type="Texture2D" uid="uid://dghj7yuuh3hww" path="res://Assets/dash_icon.png" id="7_fwenk"]
+[ext_resource type="Texture2D" uid="uid://bvgo5leuwniu5" path="res://Assets/dash_particle.png" id="8_fwenk"]
 
 [sub_resource type="GDScript" id="GDScript_e80uo"]
 script/source = "# Player.gd
@@ -334,7 +334,7 @@ offset_right = 38.0
 offset_bottom = 23.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.151053, 0.151053)
+scale = Vector2(0.4, 0.4)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
@@ -342,8 +342,8 @@ size_flags_vertical = 4
 unique_name_in_owner = true
 layout_mode = 2
 fill_mode = 5
-texture_under = ExtResource("5_qu4a1")
-texture_progress = ExtResource("5_qu4a1")
+texture_under = ExtResource("5_8sfsd")
+texture_progress = ExtResource("5_8sfsd")
 tint_under = Color(0.361575, 0.361575, 0.361575, 1)
 tint_progress = Color(0.054902, 0.803922, 0, 1)
 metadata/_edit_group_ = true
@@ -353,8 +353,8 @@ unique_name_in_owner = true
 material = ExtResource("6_cw2d6")
 layout_mode = 2
 fill_mode = 3
-texture_progress = ExtResource("6_70d11")
-tint_under = Color(1, 1, 1, 0)
+texture_progress = ExtResource("7_fwenk")
+tint_under = Color(1, 1, 1, 0.0666667)
 tint_over = Color(1, 1, 1, 0)
 metadata/_edit_group_ = true
 
@@ -367,6 +367,7 @@ unique_name_in_owner = true
 [node name="DashParticles" type="GPUParticles2D" parent="."]
 unique_name_in_owner = true
 amount = 30
-texture = ExtResource("8_khinc")
-lifetime = 0.3
+texture = ExtResource("8_fwenk")
+lifetime = 0.1
+randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_bruh7")

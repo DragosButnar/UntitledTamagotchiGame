@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://hxtwskieyekp"]
+[gd_scene load_steps=8 format=3 uid="uid://hxtwskieyekp"]
 
-[ext_resource type="Texture2D" uid="uid://blco6sx1koyhk" path="res://Assets/square.png" id="1_mlrcx"]
+[ext_resource type="Texture2D" uid="uid://t6hb5s50g6yn" path="res://Assets/box_in.png" id="1_m3uep"]
+[ext_resource type="Texture2D" uid="uid://bxv2n1fnunfvx" path="res://Assets/space.png" id="2_gjb3p"]
+[ext_resource type="Texture2D" uid="uid://ciyyy416lcs8y" path="res://Assets/box_over.png" id="2_ja6e1"]
 [ext_resource type="Texture2D" uid="uid://m24e71k80dau" path="res://Assets/up_arrow.png" id="3_m3uep"]
-[ext_resource type="Texture2D" uid="uid://cwgn5uyhwug7c" path="res://Assets/space_icon.png" id="4_ja6e1"]
 [ext_resource type="Texture2D" uid="uid://brliaponq3475" path="res://Assets/down_arrow.png" id="5_4vpn4"]
 
 [sub_resource type="GDScript" id="GDScript_bih1m"]
@@ -115,7 +116,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_ja6e1")
+"texture": ExtResource("2_gjb3p")
 }],
 "loop": true,
 "name": &"space",
@@ -165,8 +166,9 @@ max_value = 800.0
 fill_mode = 4
 radial_initial_angle = 225.0
 nine_patch_stretch = true
-texture_under = ExtResource("1_mlrcx")
-texture_progress = ExtResource("1_mlrcx")
+texture_under = ExtResource("1_m3uep")
+texture_over = ExtResource("2_ja6e1")
+texture_progress = ExtResource("1_m3uep")
 tint_under = Color(0.272655, 0.272655, 0.272655, 1)
 tint_over = Color(0.341584, 0.341584, 0.341584, 1)
 tint_progress = Color(0, 1, 1, 1)
@@ -174,8 +176,8 @@ tint_progress = Color(0, 1, 1, 1)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 position = Vector2(96, 40)
-scale = Vector2(0.507305, 0.507305)
+scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_al1wi")
-animation = &"none"
+animation = &"space"
 
 [connection signal="value_changed" from="ProgressBar" to="." method="_on_progress_bar_value_changed"]
