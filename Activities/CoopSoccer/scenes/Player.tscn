@@ -146,8 +146,6 @@ func get_effective_direction() -> Vector2:
 
 func update_particles():
 	if is_dashing:
-		# Update rotation based on current velocity
-		# TODO: don't, see Ball.gd
 		var current_dir = velocity.normalized()
 		dash_particles.rotation = current_dir.angle() + PI
 	elif dash_particles.emitting:
@@ -194,13 +192,6 @@ func _on_dash_duration_timeout():
 func _on_dash_cooldown_timer_timeout():
 	can_dash = true
 	dash_indicator.value = 100.0
-
-#func _on_body_entered(body):
-	#if body.name == \"Ball\":
-		#var direction = (body.position - position).normalized()
-		#var strength = velocity.length()
-		#emit_signal(\"ball_hit\", direction, strength)
-
 
 func get_input_vector() -> Vector2:
 	return Vector2(

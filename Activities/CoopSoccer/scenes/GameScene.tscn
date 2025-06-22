@@ -24,6 +24,7 @@ script/source = "extends Control
 @onready var pause_menu : CanvasLayer = %PauseMenu
 @onready var win_label := %WinnerLabel
 
+
 var current_scores := {1: 0, 2: 0}
 
 func _ready() -> void:
@@ -84,22 +85,24 @@ func reset_player_positions():
 	reset_player_position(2)
 
 func reset_ball():
-	ball.set_current_velocity(Vector2.ZERO)
+	ball.reset_ball()
 	ball.position = CoopSoccerManager.BALL_STARTING_POSITION
 
 func player_win(player: int, earning_message: String) -> void:
 	win_label.text = \"Player \" + str(player) + \" wins!\\n\" + earning_message
 
 func player_goal_hit(player:int) -> void:
+	if current_scores[player] < CoopSoccerManager.WIN_SCORE:
+		change_score(player, 1)
 	print(\"Player \", player, \" scored!\")
-	change_score(player, 1)
-	if current_scores[player] >= CoopSoccerManager.WIN_SCORE:
+	if current_scores[player] == CoopSoccerManager.WIN_SCORE:
 		var earning_message := RewardManager.try_grant_activity_reward()
 		CoopSoccerManager.game_win.emit(player, earning_message)
+		update_scoreboard()
 	else:
-			reset_ball()
-			reset_player_positions()
-			update_scoreboard()
+		reset_player_positions()
+		update_scoreboard()
+		reset_ball()
 
 func update_scoreboard():
 	score.text = \"\" + str(current_scores[1]) + \"/\" + str(current_scores[2])
@@ -549,7 +552,7 @@ metadata/_edit_lock_ = true
 unique_name_in_owner = true
 position = Vector2(-576, 0)
 collision_layer = 8
-collision_mask = 0
+collision_mask = 2
 metadata/_edit_lock_ = true
 
 [node name="P1Goal" type="CollisionShape2D" parent="World/Goals/P1Goal" groups=["goals"]]
@@ -560,7 +563,7 @@ shape = SubResource("RectangleShape2D_7s5hy")
 unique_name_in_owner = true
 position = Vector2(576, 0)
 collision_layer = 8
-collision_mask = 0
+collision_mask = 2
 metadata/_edit_lock_ = true
 
 [node name="P2Goal" type="CollisionShape2D" parent="World/Goals/P2Goal" groups=["goals"]]
