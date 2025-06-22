@@ -4,7 +4,7 @@
 
 [sub_resource type="GDScript" id="GDScript_ja1hk"]
 script/source = "class_name Ball
-extends CharacterBody2D
+extends RigidBody2D
 
 @export var max_speed := 1000.0
 @export var acceleration := 800.0
@@ -17,82 +17,85 @@ extends CharacterBody2D
 var was_touching_wall := false # Tracks previous frame
 
 func _ready():
-	# Connect player signals
-	var players = get_tree().get_nodes_in_group(\"players\")
-	for player in players:
-		player.ball_hit.connect(on_player_hit)
+	pass
+	
+#func _physics_process(delta):
+	#var velocity_normalized = velocity.normalized()
+	#var angular_speed = velocity.length() / radius
+	#var rotation_direction = velocity_normalized.x * velocity_normalized.y
+	#get_node(\"Sprite2D\").rotation += angular_speed * delta * rotation_direction
+	#
+	## Apply friction with delta consideration
+	##velocity *= pow(friction, delta * 60)
+	#
+	## Limit maximum speed
+	##if velocity.length() > max_speed:
+		###velocity = velocity.normalized() * max_speed
+	#
+	## Move and handle collisions
+	#move_and_slide()
+	##handle_collisions(delta)
+	#rotation = 0
+	
+func _physics_process(delta: float) -> void:
+	for i in get_contact_count():
+		var c := get_colliding_bodies()[i]
+		if c.is_in_group(\"goals\"):
+			handle_goal(c)
+	
+#func handle_collisions(delta):
+	#var touched_wall = false
+	#
+	#for i in get_slide_collision_count():
+		#var collision = get_slide_collision(i)
+		#var collider = collision.get_collider()
+		#
+		## Bounce off players and world borders
+		#if collider.is_in_group(\"players\"):
+			#handle_bounce(collision)
+		#if collider.is_in_group(\"walls\"):
+			#handle_wall_bounce(collision)
+			#touched_wall = true
+		#if collider.is_in_group(\"goals\"):
+			#handle_goal(collider)
+	#
+	#if touched_wall:
+		#if not was_touching_wall:
+			#CoopSoccerManager.wall_touched.emit()
+			#was_touching_wall = true
+	#else:
+		#if was_touching_wall:
+			#CoopSoccerManager.wall_left.emit()
+			#was_touching_wall = false
+ #
+#func handle_bounce(collision: KinematicCollision2D):
+	#var normal = collision.get_normal()
+	#var collider_velocity = collision.get_collider_velocity()
+	#
+	## Calculate bounce with energy preservation and kick factor
+	#var speed_before = velocity.length()
+	#var bounce_velocity = velocity.bounce(normal) * bounce_factor
+	#var kick_velocity = collider_velocity * kick_factor
+	#
+	#velocity += bounce_velocity + kick_velocity
+	#
+	## Preserve minimum 80% of original speed
+	#if velocity.length() < speed_before * preservation_factor:
+		#velocity += velocity.normalized() * speed_before * preservation_factor
+		#
+#func handle_wall_bounce(collision: KinematicCollision2D):
+	#var normal = collision.get_normal()
+	#var speed_before = velocity.length()
+	#
+	#print(velocity)
+	#velocity = velocity.bounce(normal) * bounce_factor
+	#print(velocity)
+	#
+	#if velocity.length() < speed_before * preservation_factor:
+		#velocity = velocity.normalized() * speed_before * preservation_factor
 
-func _physics_process(delta):
-	var velocity_normalized = velocity.normalized()
-	var angular_speed = velocity.length() / radius
-	var rotation_direction = velocity_normalized.x * velocity_normalized.y
-	get_node(\"Sprite2D\").rotation += angular_speed * delta * rotation_direction
-	
-	# Apply friction with delta consideration
-	velocity *= pow(friction, delta * 60)
-	
-	# Limit maximum speed
-	if velocity.length() > max_speed:
-		velocity = velocity.normalized() * max_speed
-	
-	# Move and handle collisions
-	move_and_slide()
-	handle_collisions(delta)
-	rotation = 0
-	
-func handle_collisions(delta):
-	var touched_wall = false
-	
-	for i in get_slide_collision_count():
-		var collision = get_slide_collision(i)
-		var collider = collision.get_collider()
-		
-		# Bounce off players and world borders
-		if collider.is_in_group(\"players\"):
-			handle_bounce(collision)
-		if collider.is_in_group(\"walls\"):
-			handle_wall_bounce(collision)
-			touched_wall = true
-		if collider.is_in_group(\"goals\"):
-			handle_goal(collider)
-	
-	if touched_wall:
-		if not was_touching_wall:
-			CoopSoccerManager.wall_touched.emit()
-			was_touching_wall = true
-	else:
-		if was_touching_wall:
-			CoopSoccerManager.wall_left.emit()
-			was_touching_wall = false
- 
-func handle_bounce(collision: KinematicCollision2D):
-	var normal = collision.get_normal()
-	var collider_velocity = collision.get_collider_velocity()
-	
-	# Calculate bounce with energy preservation and kick factor
-	var speed_before = velocity.length()
-	var bounce_velocity = velocity.bounce(normal) * bounce_factor
-	var kick_velocity = collider_velocity * kick_factor
-	
-	velocity += bounce_velocity + kick_velocity
-	
-	# Preserve minimum 80% of original speed
-	if velocity.length() < speed_before * preservation_factor:
-		velocity += velocity.normalized() * speed_before * preservation_factor
-		
-func handle_wall_bounce(collision: KinematicCollision2D):
-	var normal = collision.get_normal()
-	var speed_before = velocity.length()
-	
-	print(velocity)
-	velocity = velocity.bounce(normal) * bounce_factor
-	print(velocity)
-	
-	if velocity.length() < speed_before * preservation_factor:
-		velocity = velocity.normalized() * speed_before * preservation_factor
-
-func apply_force(direction: Vector2, strength: float):
-	velocity += direction.normalized() * strength * acceleration
+#func apply_force(direction: Vector2, strength: float):
+	#velocity += direction.normalized() * strength * acceleration
 
 func handle_goal(goal):
 	var scoring_player = 1 if \"P1Goal\" in goal.name else 2
@@ -100,10 +103,10 @@ func handle_goal(goal):
 	reset_ball()
 
 func set_current_velocity(v: Vector2):
-	velocity = v
+	linear_velocity = v
 
 func reset_ball():
-	velocity = Vector2.ZERO
+	linear_velocity = Vector2.ZERO
 	position = CoopSoccerManager.BALL_STARTING_POSITION  # Set this in your CoopSoccerManager
 
 func on_player_hit(direction: Vector2, strength: float):
@@ -117,11 +120,14 @@ func _on_game_scene_game_paused() -> void:
 [sub_resource type="CircleShape2D" id="CircleShape2D_ul5l2"]
 radius = 16.0
 
-[node name="Ball" type="CharacterBody2D" groups=["ball"]]
+[node name="Ball" type="RigidBody2D" groups=["ball"]]
 collision_layer = 2
 collision_mask = 5
-motion_mode = 1
-safe_margin = 1.0
+mass = 0.03
+gravity_scale = 0.0
+inertia = 0.3
+contact_monitor = true
+max_contacts_reported = 3
 script = SubResource("GDScript_ja1hk")
 
 [node name="Sprite2D" type="Sprite2D" parent="." groups=["ball"]]

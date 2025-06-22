@@ -502,9 +502,8 @@ sources/2 = SubResource("TileSetAtlasSource_o7et1")
 size = Vector2(59.5, 105.5)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_18ig4"]
-friction = 0.0
-bounce = 1.0
-absorbent = true
+friction = 0.3
+bounce = 0.5
 
 [node name="GameScene" type="Control"]
 layout_mode = 3
@@ -549,6 +548,8 @@ metadata/_edit_lock_ = true
 [node name="P1Goal" type="StaticBody2D" parent="World/Goals" groups=["goals"]]
 unique_name_in_owner = true
 position = Vector2(-576, 0)
+collision_layer = 8
+collision_mask = 0
 metadata/_edit_lock_ = true
 
 [node name="P1Goal" type="CollisionShape2D" parent="World/Goals/P1Goal" groups=["goals"]]
@@ -558,6 +559,8 @@ shape = SubResource("RectangleShape2D_7s5hy")
 [node name="P2Goal" type="StaticBody2D" parent="World/Goals" groups=["goals"]]
 unique_name_in_owner = true
 position = Vector2(576, 0)
+collision_layer = 8
+collision_mask = 0
 metadata/_edit_lock_ = true
 
 [node name="P2Goal" type="CollisionShape2D" parent="World/Goals/P2Goal" groups=["goals"]]
@@ -568,7 +571,6 @@ shape = SubResource("RectangleShape2D_7s5hy")
 unique_name_in_owner = true
 z_index = 1
 position = Vector2(1, 0)
-wall_min_slide_angle = 0.0872665
 metadata/_edit_lock_ = true
 
 [node name="Player1" parent="World" instance=ExtResource("1_vh257")]
@@ -637,7 +639,6 @@ metadata/_edit_lock_ = true
 [node name="Walls" type="StaticBody2D" parent="." groups=["walls"]]
 unique_name_in_owner = true
 collision_layer = 4
-collision_mask = 3
 physics_material_override = SubResource("PhysicsMaterial_18ig4")
 metadata/_edit_lock_ = true
 

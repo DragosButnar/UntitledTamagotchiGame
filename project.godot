@@ -59,6 +59,11 @@ folder_colors={
 "res://test/": "teal"
 }
 
+[global_group]
+
+ball=""
+players=""
+
 [gui]
 
 theme/custom="uid://b0y0a3w6ab13e"
@@ -131,6 +136,7 @@ p2_sprint={
 2d_physics/layer_1="players"
 2d_physics/layer_2="ball"
 2d_physics/layer_3="walls"
+2d_physics/layer_4="goals"
 
 [rendering]
 

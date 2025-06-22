@@ -14,8 +14,6 @@ script/source = "# Player.gd
 extends CharacterBody2D
 
 
-signal ball_hit(direction: Vector2, strength: float)
-
 @export var player_id := 1
 # Movement Settings
 @export var base_speed := 400.0
@@ -27,6 +25,8 @@ signal ball_hit(direction: Vector2, strength: float)
 @export var dash_cooldown := 2.0
 @export var stamina_regen_rate := 40.0
 @export var stamina_drain_rate := 60.0
+
+@export var kick_force := 10
 
 @export var flip_h : bool = false
 
@@ -102,6 +102,11 @@ func _physics_process(delta):
 	move_and_slide()
 	update_animations()
 	update_particles()
+	
+	for i in get_slide_collision_count():
+		var c := get_slide_collision(i)
+		if c.get_collider().is_in_group(\"ball\"):
+			c.get_collider().apply_central_impulse(-c.get_normal() * kick_force)
 
 func handle_input(delta):
 	var input_vector = get_input_vector()
@@ -190,11 +195,11 @@ func _on_dash_cooldown_timer_timeout():
 	can_dash = true
 	dash_indicator.value = 100.0
 
-func _on_body_entered(body):
-	if body.name == \"Ball\":
-		var direction = (body.position - position).normalized()
-		var strength = velocity.length()
-		emit_signal(\"ball_hit\", direction, strength)
+#func _on_body_entered(body):
+	#if body.name == \"Ball\":
+		#var direction = (body.position - position).normalized()
+		#var strength = velocity.length()
+		#emit_signal(\"ball_hit\", direction, strength)
 
 
 func get_input_vector() -> Vector2:
