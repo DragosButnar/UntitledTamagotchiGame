@@ -14,6 +14,8 @@ extends RigidBody2D
 @export var preservation_factor := 0.8
 @export var radius := 16
 
+var reset_state := false
+
 func _ready():
 	contact_monitor = true
 	max_contacts_reported = 4
@@ -26,16 +28,24 @@ func _on_body_entered(body: Node) -> void:
 func handle_goal(goal):
 	var scoring_player = 1 if \"P1Goal\" in goal.name else 2
 	CoopSoccerManager.player_scored.emit(scoring_player)
-	call_deferred(\"reset_ball\")
 	reset_ball()  
 
 func set_current_velocity(v: Vector2):
 	linear_velocity = v
 
+func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
+	if reset_state:
+		var t = state.get_transform()
+		t.origin.x=576
+		t.origin.y=324
+		linear_velocity = Vector2.ZERO
+		angular_velocity = 0.0
+		reset_state = false
+		state.transform = t
+
 func reset_ball():
-	linear_velocity = Vector2.ZERO
-	angular_velocity = 0.0
-	position = CoopSoccerManager.BALL_STARTING_POSITION 
+	reset_state = true
+
 
 func _on_game_scene_game_paused() -> void:
 	set_physics_process(false)
