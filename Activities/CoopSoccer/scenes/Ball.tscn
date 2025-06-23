@@ -61,7 +61,7 @@ mass = 0.03
 gravity_scale = 0.0
 inertia = 0.3
 contact_monitor = true
-max_contacts_reported = 3
+max_contacts_reported = 4
 script = SubResource("GDScript_ja1hk")
 
 [node name="Sprite2D" type="Sprite2D" parent="." groups=["ball"]]

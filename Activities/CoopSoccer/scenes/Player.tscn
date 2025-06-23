@@ -93,20 +93,24 @@ func _ready():
 		pallete.set_palette(color_pallete)
 		sprite.material = pallete
 		
-
 func _physics_process(delta):
 	handle_input(delta)
 	handle_movement(delta)
 	handle_stamina(delta)
 	update_ui()
-	move_and_slide()
+
+
+	var collision := move_and_collide(velocity * delta)
+
+
+	if collision and collision.get_collider().is_in_group(\"ball\"):
+		var dir := -collision.get_normal()          # push-out direction
+		var force := dir * kick_force               # kick_force is your exported var
+		collision.get_collider().apply_central_impulse(force)
+
 	update_animations()
 	update_particles()
-	
-	for i in get_slide_collision_count():
-		var c := get_slide_collision(i)
-		if c.get_collider().is_in_group(\"ball\"):
-			c.get_collider().apply_central_impulse(-c.get_normal() * kick_force)
+
 
 func handle_input(delta):
 	var input_vector = get_input_vector()
@@ -304,11 +308,11 @@ scale = Vector2(2.21815, 2.21815)
 collision_mask = 7
 platform_wall_layers = 4
 script = SubResource("GDScript_e80uo")
+friction = 0.0
 flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 10
-position = Vector2(0.5, 0)
 shape = SubResource("CircleShape2D_70d11")
 metadata/_edit_group_ = true
 
