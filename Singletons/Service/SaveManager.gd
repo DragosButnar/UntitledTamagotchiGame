@@ -51,6 +51,7 @@ static func load_all() -> void:
 	_load_lacreatura_data(save_data.get("stats", {}))
 	_load_last_logout(save_data.get("last_logout",
 				TimeManager.get_current_time()))
+	TimeManager.handle_login()
 
 
 # PlayerManager data collection

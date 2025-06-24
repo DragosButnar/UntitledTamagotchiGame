@@ -73,8 +73,7 @@ func set_last_logout_time(time: int) -> void:
 func get_current_time() -> int:
 	return Time.get_unix_time_from_system()
 
-func handle_login(saved_time: int) -> void:
-	last_logout_time = saved_time
+func handle_login() -> void:
 	var now := get_current_time()
 	var elapsed := now - last_logout_time
 	if elapsed > 0:
