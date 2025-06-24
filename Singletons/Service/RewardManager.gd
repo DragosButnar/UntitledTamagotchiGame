@@ -2,8 +2,8 @@ extends Node
 
 # Money earning parameters
 const MONEY_CHANCE := 1
-const MONEY_MIN := 1
-const MONEY_MAX := 10
+const MONEY_MIN := 10
+const MONEY_MAX := 30
 
 	
 func try_grant_activity_reward() -> String:

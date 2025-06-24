@@ -4,10 +4,8 @@
 extends Node
 
 """
-Re‑written for dynamic mood calculation.
 
-The `mood_value` is no longer set directly from the outside.
-Instead it is derived over time from the "quality" of the other
+The `mood_value` is derived over time from the "quality" of the other
 three gameplay stats:
 
 	• Low hunger   (⇣  ≤ 25)
