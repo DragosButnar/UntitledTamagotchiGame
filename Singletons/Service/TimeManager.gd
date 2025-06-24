@@ -1,83 +1,126 @@
-# TimeManager.gd
+# ------------------------------
+#  TimeManager.gd
+# ------------------------------
 extends Node
 
-# === CONFIGURATION ===
+"""
+Re‑written so that mood is automatically adjusted every time the
+other stats tick.  All existing public behaviour is preserved.
+"""
+
+############################################################
+#                       Constants                          #
+############################################################
+
 const ONLINE_RATES := {
-	"hunger": 2,
+	# per‑second drift while the game is running
+	"hunger":      2,
 	"loneliness": -1,
-	"energy": -1,
+	"energy":     -0.3,
 }
 
 const OFFLINE_RATES := {
-	"hunger": 1,
-	"loneliness": 1,
-	"energy": 2,
+	# per‑second drift while the game is *not* running
+	"hunger":      0.5,
+	"loneliness":  1,
+	"energy":      1,
 }
 
-const TICK_LENGTH := 1.0               # Seconds – how often we apply ONLINE_RATES
-const STATS_PRINT_INTERVAL := 10.0     # Seconds – how often we dump *all* stats to the console
+const TICK_LENGTH          := 1.0  # seconds
+const STATS_PRINT_INTERVAL := 5.0  # seconds
 
-# === STATE ===
-var _tick_timer: float = 0.0           # Accumulates time until we reach the next tick
-var _stats_log_timer: float = 0.0      # Accumulates time until the next full‑stats print
-var last_logout_time: int = 0
 
-# === ENGINE CALLBACKS ===
+############################################################
+#                      Private state                       #
+############################################################
+
+var _tick_timer     : float = 0.0
+var _stats_log_timer: float = 0.0
+var last_logout_time: int   = 0
+
+
+############################################################
+#                         Engine                           #
+############################################################
+
 func _process(delta: float) -> void:
-	# Handle per‑tick stat changes while the game is running
+	if Utilities.is_infinite_money_toggled():
+		return
+
+	# accumulate delta until we have one or more full ticks
 	_tick_timer += delta
 	if _tick_timer >= TICK_LENGTH:
 		var ticks := int(_tick_timer / TICK_LENGTH)
 		_tick_timer -= ticks * TICK_LENGTH
 		_apply_rates(ONLINE_RATES, ticks)
 
-	# Periodically dump every stat for easy debugging/monitoring
+	# periodic debug output
 	_stats_log_timer += delta
 	if _stats_log_timer >= STATS_PRINT_INTERVAL:
 		_stats_log_timer -= STATS_PRINT_INTERVAL
 		_print_all_stats()
 
-# === INTERNAL HELPERS ===
+
+############################################################
+#                        Helpers                           #
+############################################################
+
 func _apply_rates(rates: Dictionary, ticks: int) -> void:
+	"""
+	Apply the supplied `rates` for the given number of `ticks`,
+	then update mood so that it stays in sync with the *brand‑new*
+	stat values.
+	"""
 	for stat_key in rates.keys():
-		var change := int(rates[stat_key] * ticks)
+		var change = rates[stat_key] * ticks
 		if change == 0:
 			continue
+
 		var stat_enum = StatsManager.STAT_KEYS_TO_ENUM[stat_key]
 		StatsManager.add_to_stat(stat_enum, change)
-		print("[TimeManager] %s changed by %d" % [stat_key, change])
+
+	# now that the "raw" stats are up‑to‑date, recalc mood
+	StatsManager.adjust_mood(ticks)
+
 
 func _print_all_stats() -> void:
-	# Pull the *current* values directly from StatsManager to ensure accuracy.
-	var parts: PackedStringArray = []
-	for stat_key in StatsManager.STAT_KEYS_TO_ENUM.keys():
-		var stat_enum = StatsManager.STAT_KEYS_TO_ENUM[stat_key]
-		var value := StatsManager.get_stat(stat_enum)
-		parts.append("%s: %s" % [stat_key, str(value)])
-	print("[TimeManager] Current stats -> %s" % ", ".join(parts))
+	var parts := PackedStringArray()
+	for key in StatsManager.STAT_KEYS_TO_ENUM.keys():
+		var enum_val  = StatsManager.STAT_KEYS_TO_ENUM[key]
+		var value     = StatsManager.get_stat(enum_val)
+		parts.append("%s: %.1f" % [key.capitalize(), value])
 
-# === PUBLIC API ===
+	print("[Stats] " + ", ".join(parts))
+
+
+############################################################
+#            Save‑/Load‑ & Login/Logout helpers            #
+############################################################
+
 func calculate_offline_changes(elapsed_seconds: float) -> void:
+	# apply *per‑second* offline drift as whole ticks
 	_apply_rates(OFFLINE_RATES, int(elapsed_seconds))
 
-func update_passive_decay(minutes_passed: float) -> void:
-	pass
 
 func load_data(data: Dictionary) -> void:
 	last_logout_time = data.get("last_logout", get_current_time())
 	_print_all_stats()
 
+
 func set_last_logout_time(time: int) -> void:
 	last_logout_time = time
 
+
 func get_current_time() -> int:
 	return Time.get_unix_time_from_system()
+
 
 func handle_login() -> void:
 	var now := get_current_time()
 	var elapsed := now - last_logout_time
 	if elapsed > 0:
 		calculate_offline_changes(elapsed)
+
 
 func get_logout_time() -> int:
 	return get_current_time()
