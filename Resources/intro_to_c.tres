@@ -11,3 +11,4 @@ mood_boost = -10
 loneliness_reduction = -10
 cost = 10
 texture = ExtResource("2_klkgn")
+internal_name = "intro_to_c"

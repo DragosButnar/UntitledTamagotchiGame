@@ -10,4 +10,5 @@ mood_boost = 10
 loneliness_reduction = 3
 cost = 20
 texture = ExtResource("2_plxae")
+internal_name = "saucer"
 metadata/_custom_type_script = "uid://crkvnux80mw5n"

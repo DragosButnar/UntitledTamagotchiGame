@@ -10,4 +10,5 @@ mood_boost = 15
 loneliness_reduction = 4
 cost = 20
 texture = ExtResource("2_tr3xu")
+internal_name = "the_little_prince"
 metadata/_custom_type_script = "uid://c162wr6iex2nb"

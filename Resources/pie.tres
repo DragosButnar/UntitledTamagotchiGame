@@ -14,4 +14,5 @@ hunger_reduction = 9
 mood_boost = 15
 cost = 21
 texture = SubResource("AtlasTexture_01x6l")
+internal_name = "pie"
 metadata/_custom_type_script = "uid://tck0vgw301co"

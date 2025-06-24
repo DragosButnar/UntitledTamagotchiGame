@@ -10,10 +10,11 @@ with placeholder methods. Subclasses must override these methods.
 
 @export var cost: int
 @export var texture: Texture2D = preload("res://Assets/placeholder16x16.png")
+@export var internal_name : String
 
 func get_internal_name() -> String:
 	# Return the internal name of this resource
-	return self.resource_name
+	return self.internal_name
 
 func get_display_name() -> String:
 	printerr("get_name() not implemented in subclass!")

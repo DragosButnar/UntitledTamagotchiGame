@@ -10,4 +10,5 @@ mood_boost = 5
 loneliness_reduction = -1
 cost = 3
 texture = ExtResource("2_ll6i5")
+internal_name = "color_cube"
 metadata/_custom_type_script = "uid://crkvnux80mw5n"

@@ -104,7 +104,7 @@ func _on_item_button_toggled(toggled_on: bool) -> void:
 	
 func show_dialogue(tag:String=\"\"):
 	dialogue_bubble.show()
-	dialogue_label.text = DialogueManager.get_current_dialogue_line()
+	dialogue_label.text = DialogueManager.get_current_dialogue_line(tag)
 	dialogue_timer.start(DIALOGUE_TIMER)
 "
 

@@ -10,4 +10,5 @@ mood_boost = 12
 loneliness_reduction = -4
 cost = 10
 texture = ExtResource("2_hxo7s")
+internal_name = "tower_of_hanoi"
 metadata/_custom_type_script = "uid://crkvnux80mw5n"
